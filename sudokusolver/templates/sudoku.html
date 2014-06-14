@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block header %}
+    <style>
+    .square_field {
+         width:50px;
+        }
+    .textinput{
+        width:50px;
+        text-align:center;
+        }
+    td {
+        padding:25px;
+        }
+    </style>
+        <script type="text/javascript">
+        $(function() {
+            $("#dialog-modal-help").dialog({
+                                      autoOpen: false,
+                                      show: {
+                                        effect: "blind",
+                                        duration: 1000
+                                      },
+                                      hide: {
+                                        effect: "blind",
+                                        duration: 1000
+                                      }
+                                    });
+
+                                    $("#help_button").click(function() {
+                                      $( "#dialog-modal-help" ).dialog( "open" );
+                                    });
+        $("#solve").click(function(e){
+                var textboxes = $(".textinput");
+                textboxes.each(function (i) {
+                    if (textboxes[i].value != ""){
+                        var value = parseInt(textboxes[i].value)
+                        if (isNaN(value) || value < 1 || value > 9){
+                            alert("Please Enter Only Integer from 1 to 9");
+                            e.preventDefault();
+                            return false;
+                        }
+                    }
+                });
+            });
+        });
+
+    </script>
+{% endblock %}
+
+{% block body %}
+<div class="page-header">
+    <h2 class="text-muted">Please Fill Soduku Values</h2>
+</div>
+<div id="dialog-modal-help" title="Help">
+    <p>Play Sudoku and Have Fun
+    Developed By Vikas Garg (for queries contact at viikasgarg@gmail.com)
+    </p>
+</div>
+                <div class="btn-group-horizontal">
+
+                    <a type="button" class="btn btn-primary"
+                            href="{% url sudokusolver.play 'easy' %}">
+                        Easy
+                    </a>
+
+                    <a type="button" class="btn btn-primary"
+                            href="{% url sudokusolver.play 'medium' %}">
+                        Medium
+                    </a>
+
+                    <a type="button" class="btn btn-primary"
+                            href="{% url sudokusolver.play 'hard' %}">
+                        Hard
+                    </a>
+
+                    <button type="button" class="btn btn-danger">
+                        Print
+                    </button>
+
+                    <button id="help_button" type="button" class="btn btn-info">
+                        Help
+                    </button>
+
+
+                </div>
+<form class"uniForm" method="post">
+                {% if grid_form %} {% crispy grid_form %} {% endif %}
+                    <button id="help_check" type="submit" class="btn btn-success">
+                        Check
+                    </button>
+</form>
+{% if msg %}
+{{msg}}
+{% endif %}
+{% endblock %}

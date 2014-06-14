@@ -1,0 +1,5 @@
+table { border:3px solid black; }
+td { width:60px; height:60px; border:1px solid black; }
+td:nth-child(3n) { border-right-width:3px; }
+tr:nth-child(3n) td { border-bottom-width:3px; }
+

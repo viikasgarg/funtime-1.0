@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block header %}
+    <script src="/static/calculator/js/calc.js"></script>
+    <link href="/static/calculator/css/calc.css" rel="stylesheet">
+   
+{% endblock %}
+
+{% block body %}
+            <div class="page-header">
+                <h2 class="text-muted"> JavaScript Calculator</h2>
+            </div>
+
+            <div class="btn-group-horizontal">
+
+                <select name=choose id=combo1 onChange=hideShowCalc(tab1)>
+                    <option value=0>select</option>
+                    <option value=1>Hide Calculator</option>
+                    <option value=2>Show Calculator</option>
+                <select>
+            
+                 <form class="calc" id=tab1>
+                </form>
+            </div>
+
+{% endblock %}
