@@ -1,1 +1,1 @@
-web: gunicorn wsgi --log-file logfile
+web: gunicorn funtime.wsgi --log-file -
