@@ -1,0 +1,27 @@
+2014-07-30 19:08:39 [13122] [INFO] Starting gunicorn 19.0.0
+2014-07-30 19:08:39 [13122] [INFO] Listening at: http://0.0.0.0:5000 (13122)
+2014-07-30 19:08:39 [13122] [INFO] Using worker: sync
+2014-07-30 19:08:39 [13125] [INFO] Booting worker with pid: 13125
+2014-07-30 19:09:16 [13122] [INFO] Handling signal: int
+2014-07-30 19:09:16 [13122] [INFO] Shutting down: Master
+2014-07-30 19:09:17 [13134] [INFO] Starting gunicorn 19.0.0
+2014-07-30 19:09:17 [13134] [INFO] Listening at: http://0.0.0.0:5000 (13134)
+2014-07-30 19:09:17 [13134] [INFO] Using worker: sync
+2014-07-30 19:09:17 [13137] [INFO] Booting worker with pid: 13137
+2014-07-30 08:41:26 [13137] [INFO] Worker exiting (pid: 13137)
+2014-07-30 19:11:26 [13134] [INFO] Handling signal: int
+2014-07-30 19:11:26 [13134] [INFO] Shutting down: Master
+2014-07-30 19:11:27 [13158] [INFO] Starting gunicorn 19.0.0
+2014-07-30 19:11:27 [13158] [INFO] Listening at: http://0.0.0.0:5000 (13158)
+2014-07-30 19:11:27 [13158] [INFO] Using worker: sync
+2014-07-30 19:11:27 [13161] [INFO] Booting worker with pid: 13161
+2014-07-30 08:42:19 [13161] [INFO] Worker exiting (pid: 13161)
+2014-07-30 19:12:19 [13158] [INFO] Handling signal: int
+2014-07-30 19:12:20 [13158] [INFO] Shutting down: Master
+2014-07-30 19:12:51 [13171] [INFO] Starting gunicorn 19.0.0
+2014-07-30 19:12:51 [13171] [INFO] Listening at: http://0.0.0.0:5000 (13171)
+2014-07-30 19:12:51 [13171] [INFO] Using worker: sync
+2014-07-30 19:12:51 [13174] [INFO] Booting worker with pid: 13174
+2014-07-30 08:44:38 [13174] [INFO] Worker exiting (pid: 13174)
+2014-07-30 19:14:38 [13171] [INFO] Handling signal: int
+2014-07-30 19:14:39 [13171] [INFO] Shutting down: Master

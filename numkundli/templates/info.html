@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+ {%block jquery_ui %}
+      <link href="/static/toolkit/toolkit.min.css" rel="stylesheet">
+      <script src="/static/toolkit/toolkit-jquery.min.js"></script>
+      <script src="/static/toolkit/toolkit-mootools.min.js"></script>
+
+{% endblock %}
+
+{% block header %}
+     <script>
+      $(function() {
+        $('.tabs').tabs();
+      });
+      </script>
+{% endblock %}
+
+{% block body %}
+    <div class="page-header">
+        <h2>{{title}}</h2>
+    </div>
+
+<div class="tabs tabs--horizontal grid">
+  <nav class="tabs-nav col span-2">
+  <ul>
+    <li><a href="#tabs-1">Life Path</a></li>
+    <li><a href="#tabs-2">Expression Number</a></li>
+    <li><a href="#tabs-3">Soul Urge</a></li>
+    <li><a href="#tabs-4">Life Challenges</a></li>
+    <li><a href="#tabs-5">Personal Year</a></li>
+    <li><a href="#tabs-6">Essences</a></li>
+    <li><a href="#tabs-7">Pinnacle</a></li>
+  </ul>
+  </nav>
+
+    <div class="col span-10">
+
+  <section class="tabs-section" id="tabs-1">
+    <h2>Life Path</h2>
+    <p><pre>{{info.lifepath}}</pre></p>
+  </section>
+
+  <section class="tabs-section" id="tabs-2">
+    <h2>Expression Number</h2>
+    <p><pre> {{info.exp_num}} </pre></p>
+  </section>
+
+  <section class="tabs-section" id="tabs-3">
+    <h2>Soul Urge</h2>
+    <p><pre>{{info.soul_urge}}</pre> </p>
+  </section>
+
+  <section class="tabs-section" id="tabs-4">
+    <h2>Life Challenges</h2>
+    <p><h3>First Challenge</h3> <pre>{{info.challenge_nums.sub1}}</pre> </p>
+    <p><h3>Second Challenge</h3> <pre>{{info.challenge_nums.sub2}}</pre> </p>
+    <p><h3>Final Challenge</h3> <pre>{{info.challenge_nums.final}}</pre> </p>
+  </section>
+
+  <section class="tabs-section" id="tabs-5">
+    <h2>Personal Year</h2>
+    <p><pre>{{info.personal_nums}}</pre> </p>
+  </section>
+
+  <section class="tabs-section" id="tabs-6">
+    <h2>Essences</h2>
+    <p><pre>{{info.essences}}</pre> </p>
+  </section>
+
+  <section class="tabs-section" id="tabs-7">
+    <h2>Pinnacle</h2>
+    <p><h3>First Pinnacle</h3> <pre>{{info.pinnacle_nums.first_pinnacle}}</pre> </p>
+    <p><h3>Second Pinnacle</h3> <pre>{{info.pinnacle_nums.second_pinnacle}}</pre> </p>
+    <p><h3>Third Pinnacle</h3> <pre>{{info.pinnacle_nums.third_pinnacle}}</pre> </p>
+    <p><h3>Fourth Pinnacle</h3> <pre>{{info.pinnacle_nums.fourth_pinnacle}}</pre> </p>
+  </section>
+    </div>
+
+</div>
+{% endblock %}

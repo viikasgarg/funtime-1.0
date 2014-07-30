@@ -17,8 +17,8 @@ from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
 
 class LoginForm(forms.Form):
-    username = forms.CharField(max_length=100)
-    password = forms.CharField(widget=forms.PasswordInput(render_value=False),max_length=100)
+    username = forms.CharField(max_length=30)
+    password = forms.CharField(widget=forms.PasswordInput(render_value=False),max_length=30)
 
     def __init__(self,*args,**kwargs):
         self.helper = FormHelper()
@@ -53,10 +53,19 @@ class RegistrationForm(forms.Form):
                                 label=_("Username"),
                                 error_messages={'invalid': _("This value may contain only letters, numbers and @/./+/-/_ characters.")})
     email = forms.EmailField(label=_("E-mail"))
+
+    fname = forms.CharField(label=_("First Name"), max_length=30)
+
+    mname = forms.CharField(label=_("Middle Name"), max_length=30, required = False)
+
+    lname = forms.CharField(label=_("Last Name"), max_length=30)
+
+    dob = forms.DateField(initial=datetime.date.today)
+
     password1 = forms.CharField(widget=forms.PasswordInput,
-                                label=_("Password"))
+                                label=_("Password"), max_length=30)
     password2 = forms.CharField(widget=forms.PasswordInput,
-                                label=_("Password (again)"))
+                                label=_("Password (again)"), max_length=30)
 
 
     def __init__(self,*args,**kwargs):
@@ -65,6 +74,10 @@ class RegistrationForm(forms.Form):
         self.helper.form_method = 'POST'
         self.helper.layout = Layout(
             Field('username',placeholder = 'UserName'),
+            Field('fname',placeholder = 'First Name'),
+            Field('mname',placeholder = 'Middle Name'),
+            Field('lname',placeholder = 'Last Name'),
+            Field('dob',placeholder = 'Date Of Birth'),
             Field('email',placeholder = 'Unique Email Id'),
             Field('password1',placeholder = 'Password'),
             Field('password2',placeholder = 'Password Again'),

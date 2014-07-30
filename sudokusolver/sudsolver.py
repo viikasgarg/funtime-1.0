@@ -1,7 +1,3 @@
-from Tkinter import *
-import tkMessageBox                  ## Providing standard error and info dialogs
-import tkFileDialog                  ## Providing Tkinter File Dialogs to open or save file
-import marshal                       ## Data serializer and extractor from the file
 import copy
 from time import time
 
@@ -9,8 +5,6 @@ class Sudoku:
     def __init__(self,data):
         self.data = copy.deepcopy(data)
         self.oldrow = copy.deepcopy(data)
-
-
 
     def solve(self):
         start = time()
@@ -152,7 +146,6 @@ class Sudoku:
                         return 1
                 else:
                     comp=0
-
         if comp:
             return 2
 

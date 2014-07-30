@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block header %}
+  <script>
+  $(function() {
+    var d = new Date();
+    var year = d.getFullYear() - 18;
+    d.setFullYear(year);
+
+    $(".dateinput").datepicker({
+      changeMonth: true,
+      changeYear: true,
+      defaultDate: d
+        });
+    $(".dateinput").attr("readonly", "readonly");
+    $(".dateinput").css('cursor', 'pointer');
+    $(".control-group").each(function() {
+                $(this).addClass('col-lg-3');
+            });
+    $(".row").css('margin-bottom','15px');
+
+    $( "#accordion" ).accordion({
+        heightStyle: "content",
+
+    });
+
+    $( "#accordion-resizer" ).resizable({
+          minHeight: 140,
+          minWidth: 200,
+          resize: function() {
+            $( "#accordion" ).accordion( "refresh" );
+          }
+    });
+
+
+
+  });
+  </script>
+{% endblock %}
+
+{% block body %}
+    <div id="accordion-resizer" class="ui-widget-content">
+        <div id="accordion">
+        <h3>Know Your Future</h3>
+            <div>
+                <p>
+                    {% if form  %}
+                        {% crispy form %}
+                    {% endif %}
+                </p>
+            </div>
+
+            <h3>What is NUMEROLOGY ???</h3>
+            <div>
+                <pre>The ancient sages and seers probed the mysterious realm of numbers and their relationship with the planets.Numerology is a science that deals with the study of numbers, their correct combination their and interaction in one's life.
+
+The basic numbers are 1 to 9. Zero has no value but in association with certain numbers, it does throw light on various other aspects of life.
+
+Each number has a hidden meaning and an interesting importance for the life of the natives. Not only the numbers but also the names by which persons are called are also important in the natives life. When a lady changes her name after her marriage her life pattern also undergoes a change. The new vibrations lead to the beginning of a new chapter in that persons life; it may mean new environment, new way of thinking, along with new interests and new duties and responsibilities.
+
+Numerology helps and forewarns about impending hardships, so that one can meet the challenges and check the imbalances. Just as the right medical attention can cure a patient, similarily right astrological guidance caan help solve many a problem. In any occult science, what one needs most , apart from sound knowledge, is dedicaation, devotion, a religious bent of mind and above all an intuitive quality to guide the predictor with almost divine insight.
+
+With the help of numerology, one can forecast the future of an individual or a nation by calculating the influence of numbers peculiar to the date of birth or name. The attempt is to relate the respective numbers with corresponding planets to bring home the apparent relationship between astrology and numerology. Our ancient seers had done intensive research and revealed that the cosmos has tremendous influence on the life of the natives.Everyday experience shows that one is attracted to the person whose number is in harmony with his and rather unfriendly with those whose numbers are in disharmony. Also the theory of sound vibrations relating to alphabets (each alphabet has a number alloted) belongs to the ancient vedic sculptures.
+
+NUMBERS MENU
+
+The ancient sages assigned the following numbers to each of the nine planets:
+
+Number 1--SUN
+
+Number 2--MOON
+
+Number 3--JUPITER
+
+Number 4--URANUS
+
+Number 5--MERCURY
+
+Number 6--VENUS
+
+Number 7--NEPTUNE
+
+Number 8--SATURN
+
+Number 9--MARS
+
+There are four types of numbers:
+
+1.Birth Number:
+This is a single number derived from the date of birth from 1st. to 31st. (A person born of the 15th. of a month will have his birth number as 1+5=6).
+
+2.Spiritual Number:
+This is the number which is derived from the date of birth with the month and the year. Spiritual Number is also called the date of birth number or the Conscience Number.
+
+3.Name Number:
+This represents the number corresponding to alphabets in the name.
+
+4.Year Number:
+This is the single number derived from adding all the numericals of the birth year (The century year is not to be omitted).
+
+The Birth Number of an individual is the most important factor from the point of view of numerology. Next is the Spiritual Number, which is associated with us throughout our life and this consequently, is of greatest importance to us.
+
+We can never change the Spiritual Number, as we can change our Name Number, since it is derived from the numbers of the day, month and tear of birth.This number exhibits the basic traits of our personality and character, which we are endowed with at the time of our birth. It gives us insights into our future and if we choose, it may guide our daily conduct. It is also calle dthe Conscience Number, as we can know a lot about ourselves through it.
+
+The relationship between the Birth number and the Spiritual Number is also important as it throws light on the various aspects of the individual's life. If the Birth Number of a person is in harmony with his Spiritual Number, events in one's life can be predicted with a fair amount of accuracy.
+Further, the nameNumber which is generally adopted is alsoimportant so far as one's profession, position and prestige is concerned. If the Birth Number, the Spiritual Number and the Name Number arethe same or in harmony, the individual's life style becomes already known and events tke place with greateramount of certainity.For example, if a personis bornon 24th. and if his date of birth is 24-9-1935 the Spiritual Number will be 6 as given under:
+24-9-1935------2+4+9+1+9+3+5=33=3+3=6
+and if the numerical significance of the alphabets comprising his name also comes to 6 (24 is 2+4=6), the person is said to be most fortunate and he will receive the help and assistance of person in high authority and Lord Ganesh willing, shall achieve his major aims, have family happiness and attain a high position in life.
+The date of birth of an individual denotes his birth numberand the date of birth number (or the Spiritual Number) which help in revealing general characteristics and represents a definite vibration of the concerned individual. The general characteristics of a person known by birth number/spiritual number may become modified in the course of one's life through association with name numbers (sometimes the name number changes due to adding a prefix or consequent upon marriage in the case of ladies), the street number, the house name or number, the car number and the names or numbers of the premises, which he may use for his business purposes. If these numbers are also in harmony with his birth number and the date of birth number (or Spiritual Number) it will signify the smoothness with which events will take place in his life.
+
+If however, the birth number and the date of birth number (Spiritual number) are not in harmony with' other vital numbers, he may have difficulties, which would necessitate change in profession, business, residence, name; so that he can have a smooth sailing. Experience has shown that one is often able to obtain satisfactory results after changing one's name or house, as the new house number or the name number are in greater harmony with his basic numbers (the birth number and the date of birth number or the Spiritual number).
+
+Experience has shown that events in one's life have a recurring cycle and as the year of one's birth is an important indicator, the other years which are in harmony with his birth year would show marked and outstanding achievements with regard to one's professional career and life. Supposing a person is born in the year 1939, the year 1993 which has the same numerals will be an eventful year. Years which are not in harmony, will be the years in which the natives would have to swim across the current and meet challenges/ obstacles.
+
+The year number in which one is born will often give indication of major happenings in future, for events repeat themselves after a regular interval. A person born in the year 1934 (1 + 9 + 3 + 4 = 17 = 1 + 7 = 8) (year number 8) (for this purpose the complete year including the centurial 19 should be considered), will experience the years whose addition number works to 8 (for this purpose the complete year including the centurial 19 should be considered), as eventful years. They are 1943, 1952, 1961, 1970, 1979, 1988, 1997 etc., thus indicating a 9 year cycle of good luck.
+
+SIGNIFICANCE OF THE FIRST ALPHABET OF THE PERSON'S NAME
+The name by which one is known is very important from the point of view of astronumerology. It is the contact point, with which one deals with others. It reveals many important traits of a person's character and behavioral pattern. One can fairly have an insight into many traits of his personality. Our study of this aspect will enable the readers to have good insight into their contacts and to use them to their advantage. The first word of a person's name tells us not only about the general character and characteristics and emotional reactions but also how best he can be approached or dealt with through the emotions. A person with the name starting with 'S' will be found to be emotional, reative, intuitive and endowed with rich experience. In course of time, he would develop higly specialized talents. If the person has 'S' 'S' (double S) in his name, the positive qualities will be accentuated. He may have certain untoward events in life but will be able to meet these challenges boldly. He will develop an excellent personality. There may be tendency to add weight. Inspite of a mark on his face or part of body, he would be able to make significant impacts on all those in whose contact he comes. If his name starts with 'S', 'S', 'S' (triple S), the positive qualities would be magnified. He would have slim and trim personality and would attain distinction in his field of activity. He would be extraordinarily good, be an intellectual and devoted to creative pursuits. It may be beyond the scope of this book to discuss in detail the powerful vibrations that the repetition of the various alphabets signify in natives names, but an attempt has been made in this chapter to give an insight into the hidden meanings of the occult as revealed by various alphabets of English, by which persons are popularly known.
+
+Although there are several systems of assigning numbers to the English alphabet, it has been observed through experience and research that the following numerical values would yield fairly accurate results.
+
+
+In the ancient civilization, number 9 was attached with the God and the divine forces. Number 9, which is most powerful number in Indian system of numerology is also frequently referred in the ancient Indian mythology and other mythologies, i.e. there are 9 muses, 9 angles in Heaven, 9 devils in hell etc. For this reason, no alphabet has• been assigned the numerical value of number 9. The ancient masters of occultism knew that the powerful number 9 represented the name of God and divine forces. For this reason, no single letter was assigned the numerical value of number 9.
+
+Number 9 is the highest of the basic numbers, the positive side of which is construction and the negative side is destruction. Every Hindu uses the rosary of 108 beads in his day to day prayers, with a view to consign the rhythm of time and space so that it may harmonies with the internal forces identified with God. Even with Tantra Shastra considerable importance is attached to number 9. In India, Shaktipuja, too, is dominated by this master number 9. This number is connected with spiritualism and divine forces. It has a magnetic appeal to others and all those associated with it will be found to be enthusiastic for love peace and harmony exhibit and enjoy enthusiasm for love and life. They will also have compassion, humanitarian, sympathetic and generous approach.
+
+Through experience, natives will observe that the important changes/events in their life will have a recurring cycle and this cycle will depend on the prominence of certain numbers in their dates of birth and other vital numbers. Notwithstanding this principle of repetition of events at certain cycles, the events which may take place in certain years would be more pleasing to the natives than in other years. For example, the years, whose single numbers work out to be in harmony with their birth numbers will be the years which will).sure them success on various fronts, whereas the years which are in disharmony with their birth numbers would entail greater effort struggle and some untoward events.
+
+If a person's birth number is 2, he would find that the years whose total works out to 2 would be the years of his achievements. For example, the year 1991 would total out to 20 or 2 (after omitting zero). This year would be an outstanding year for natives of this birth date or other vital numbers. This general principle may sometime get modified if the natives have presence of inharmonious numbers.
+</pre>
+            </div>
+
+        </div>
+    </div>
+
+{% endblock %}

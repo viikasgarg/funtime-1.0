@@ -15,9 +15,13 @@
 
     <!-- Custom styles for this template -->
     <link href="/static/justified-nav.css" rel="stylesheet">
-    <link href="/static/jquery-ui-1.10.4.custom/css/le-frog/jquery-ui-1.10.4.custom.css" rel="stylesheet">
-    <script src="/static/jquery-ui-1.10.4.custom/js/jquery-1.10.2.js"></script>
-    <script src="/static/jquery-ui-1.10.4.custom/js/jquery-ui-1.10.4.custom.js"></script>
+    <script src="/static/jquery-ui-1.11.0.custom/external/jquery/jquery.js"></script>
+
+    {%block jquery_ui %}
+        <link href="/static/jquery-ui-1.11.0.custom/jquery-ui.css" rel="stylesheet">
+        <link href="/static/jquery-ui-1.11.0.custom/jquery-ui.theme.css" rel="stylesheet">
+        <script src="/static/jquery-ui-1.11.0.custom/jquery-ui.js"></script>
+    {% endblock %}
     <!-- Just for debugging purposes. Don't actually copy this line! -->
     <!--[if lt IE 9]><script src="/static/js/ie8-responsive-file-warning.js"></script><![endif]-->
 
@@ -36,7 +40,7 @@
 
     <div class="container">
       <div class="masthead">
-        <h1 class="text-muted">Fun Time </h1>
+        <h1 style="font-weight: bold;color: #b15315;">Fun Time </h1>
         {% load menubuilder %}{% menu top %}
       </div>
     {% block body %}
