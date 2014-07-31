@@ -1,6 +1,6 @@
 # Django settings for funtime project.
 import os
-DEBUG = False
+DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
@@ -11,14 +11,6 @@ MANAGERS = ADMINS
 
 DATABASES = {}
 '''
-    'sqlite3': {
-        'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'funtimedb',                      # Or path to database file if using sqlite3.
-        'USER': '',                      # Not used with sqlite3.
-        'PASSWORD': '',                  # Not used with sqlite3.
-        'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
-    },
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
         'NAME': 'funtime',                      # Or path to database file if using sqlite3.
@@ -27,11 +19,19 @@ DATABASES = {}
         'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
         'PORT': '5432',                      # Set to empty string for default. Not used with sqlite3.
     }
+
+}
 '''
-
-
-
-
+'''
+ 'sqlite3': {
+        'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+        'NAME': 'funtimedb',                      # Or path to database file if using sqlite3.
+        'USER': '',                      # Not used with sqlite3.
+        'PASSWORD': '',                  # Not used with sqlite3.
+        'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
+        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
+    }
+'''
 
 # Hosts/domain names that are valid for this site; required if DEBUG is False
 # See https://docs.djangoproject.com/en/1.4/ref/settings/#allowed-hosts
