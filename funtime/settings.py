@@ -153,6 +153,7 @@ INSTALLED_APPS = (
      'brainteaser',
      'calculator',
      'numkundli',
+     'dictionary',
      'autocomplete_light',
 )
 
