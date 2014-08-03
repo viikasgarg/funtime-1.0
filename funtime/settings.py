@@ -1,6 +1,6 @@
 # Django settings for funtime project.
 import os
-DEBUG = True
+DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
@@ -153,6 +153,7 @@ INSTALLED_APPS = (
      'brainteaser',
      'calculator',
      'numkundli',
+     'autocomplete_light',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (

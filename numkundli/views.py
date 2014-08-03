@@ -62,8 +62,7 @@ class KundliFormView(View):
             info = NumKundliInfo(birthday, first_name, middle_name, last_name)
             title = first_name + " " + middle_name + " " + last_name + " [ " + \
                     birthday.strftime("%d %B %Y (%A)") + " ]"
-            print "Vikas"
-            print title
+
             return render(request, 'info.html', {'info': info, 'title':title})
 
         return render(request, self.template_name, {'form': form})

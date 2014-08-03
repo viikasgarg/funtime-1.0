@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block header %}
+<style>
+.form_size{
+  height:60px;
+   margin-top: 30px;
+}
+
+</style>
+
+<script>
+    $(function() {
+        $( ".accordion" ).accordion(
+          { header: "h2", collapsible: true, active: false, heightStyle: "content" }
+          );
+    });</script>
+ {% include 'autocomplete_light/static.html' %}
+{% endblock %}
+
+{% block body %}
+    <div>
+        <p>
+            {% if form  %}
+                {% crispy form %}
+            {% endif %}
+        </p>
+    </div>
+    {% if message %}
+        <div class="alert alert-error">
+          <strong> {{ message }} </strong>
+        </div>
+    {% endif %}
+    {% if words %}
+        <h1> {{ words.0.name }} </h1>
+    {% endif %}
+<div class="accordion">
+    {% for word in words %}
+      <h2> {{word.dic_name}}</h2>
+      <div> <p>
+          <pre>
+            {{word.definition}}
+          </pre> </p>
+      </div>
+    {% endfor %}
+</div>
+{% endblock %}
