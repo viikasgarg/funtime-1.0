@@ -11,17 +11,15 @@ var showCalc = 2 ;
 
 operation = document.getElementById('combo1').value;
 
-if(operation == hideCalc)
-	{
-       		if(window.confirm("Do u really want to hide calculator"))
+if(operation == hideCalc) {
+       if(window.confirm("Do u really want to hide calculator"))
 		{
 			calc.style.visibility="hidden";
 		}
 	}
 
-if(operation == showCalc)
-	{
-       		if(window.confirm("Do u really want to Show calculator"))
+if(operation == showCalc) {
+       if(window.confirm("Do u really want to Show calculator"))
 		{
 			if(!calcDrawn)
 			{
@@ -35,9 +33,12 @@ if(operation == showCalc)
 			}
 		}
 	}
+}
 
-
-
+function drawOnLoad(calc){
+	drawCalc(calc);
+	calc.style.visibility="visible";
+	calcDrawn = 1;
 }
 
 function drawCalc(calc)

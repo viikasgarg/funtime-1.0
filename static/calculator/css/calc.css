@@ -102,11 +102,6 @@ input, button {
   src: url(../fonts/UbuntuMono.woff) format("woff");
 }
 
-body {
-  font: 12px/20px 'Lucida Grande', Tahoma, Verdana, sans-serif;
-  color: #404040;
-}
-
 .calc {
   margin: 50px auto;
   padding: 15px;
