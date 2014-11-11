@@ -1,6 +1,6 @@
 # Django settings for funtime project.
 import os
-DEBUG = True
+DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
@@ -9,7 +9,8 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
-DATABASES = {
+DATABASES = {}
+'''
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
         'NAME': 'funtime',                      # Or path to database file if using sqlite3.
@@ -20,7 +21,7 @@ DATABASES = {
     }
 
 }
-
+'''
 '''
  'sqlite3': {
         'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
@@ -198,9 +199,8 @@ LOGGING = {
 
 
     # Parse database configuration from $DATABASE_URL
-if not DEBUG:
-    import dj_database_url
-    DATABASES['default'] =  dj_database_url.config()
+import dj_database_url
+DATABASES['default'] =  dj_database_url.config()
 
 # Honor the 'X-Forwarded-Proto' header for request.is_secure()
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
