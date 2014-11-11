@@ -1,0 +1,163 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block header %}
+    <link href="/static/guesscolor/css/guesscolor.css" rel="stylesheet">
+    <script src="/static/guesscolor/js/guesscolor.js"></script>
+
+        <script type="text/javascript">
+    $(function() {
+        $("#dialog-help").dialog({
+                                  autoOpen: false,
+                                  modal:true,
+                                  show: {
+                                    effect: "blind",
+                                    duration: 1000
+                                  },
+                                  hide: {
+                                    effect: "blind",
+                                    duration: 1000,
+
+                                  }
+                                });
+
+
+
+
+        $("#dialog-timeup").dialog({
+                                  autoOpen: false,
+                                  modal:true,
+                                  show: {
+                                    effect: "blind",
+                                    duration: 1000
+                                  },
+                                  hide: {
+                                    effect: "blind",
+                                    duration: 1000
+                                  },
+                                  close:startGame,
+                                });
+
+        $("#dialog-wrongpressed").dialog({
+                                  autoOpen: false,
+                                  modal:true,
+                                  show: {
+                                    effect: "blind",
+                                    duration: 1000
+                                  },
+                                  hide: {
+                                    effect: "blind",
+                                    duration: 1000
+                                  },
+                                  close:startGame,
+                                });
+
+        $("#dialog-congrats").dialog({
+                                  autoOpen: false,
+                                  modal:true,
+                                  show: {
+                                    effect: "blind",
+                                    duration: 1000
+                                  },
+                                  hide: {
+                                    effect: "blind",
+                                    duration: 1000
+                                  },
+                                  close:nextLevel,
+                                });
+
+                                $("#help_button").click(function() {
+                                  $( "#dialog-help" ).dialog( "open" );
+                                });
+
+                                $("#game").hide();
+                            });
+
+
+    </script>
+
+{% endblock %}
+
+{% block body %}
+            <div class="page-header">
+                <h2 class="text-muted">Guess Color Brain Teaser</h2>
+            </div>
+
+            <div class="btn-group-horizontal">
+
+                <button type="button" class="btn btn-success" onclick="startGame();">
+                    Start/Restart
+                </button>
+
+                <button type="button" class="btn btn-primary">
+                    Print
+                </button>
+                 <button id="help_button" type="button" class="btn btn-primary">
+                    Help
+                </button>
+
+                <button  type="button" class="btn btn-default">
+                        Timer
+                    </button>
+
+                    <button id="timer" type="button" class="btn btn-danger">
+                        0
+                    </button>
+            </div>
+
+            <br>
+            <div id="help" title="Help" style="width:400px;">
+                <p>Guess Color Game: You have to search for the colors at right position.
+                  Lets see how easily you will find out them.
+                  (for queries contact at viikasgarg@gmail.com)
+                </p>
+            </div>
+
+            <div id="dialog-help" title="Help" >
+              <img src="/static/guesscolor/images/Help.jpg" />
+                <p>
+                  (for queries contact at viikasgarg@gmail.com)
+                </p>
+            </div>
+
+            <div id="dialog-timeup" title="Time Up" >
+                <p>Time Up for the puzzle. The Game will be restarted.
+                </p>
+            </div>
+
+            <div id="dialog-triesdone" title="Tries Over" >
+                <p>You have attempted your all tries. lets try again :).
+                </p>
+            </div>
+
+            <div id="dialog-congrats" title="Congratulations" >
+                <p>Congratulations,Close this dialog to play again :).
+                </p>
+            </div>
+
+            <div id="game">
+                <div id="game-object" style="width:400px;">
+
+                </div>
+                <br>
+                 <div>
+                 <button type="button" class="btn btn-default">
+                        Level
+                    </button>
+
+                    <button id="level" type="button" class="btn btn-inverse">
+                        1
+                    </button>
+
+                    <button  type="button" class="btn btn-default">
+                        Score
+                    </button>
+
+                    <button id="score" type="button" class="btn btn-info">
+                        0
+                    </button>
+
+
+
+                </div>
+            </div>
+{% endblock %}

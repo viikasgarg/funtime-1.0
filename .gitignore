@@ -2,7 +2,8 @@
 __pycache__/
 *.py[cod]
 *~
-
+*.pyc
+settings_local.py
 # C extensions
 *.so
 dictionary.json

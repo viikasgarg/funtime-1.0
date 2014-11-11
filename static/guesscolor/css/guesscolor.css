@@ -1,0 +1,74 @@
+.box {
+    display:block;
+    height:100%;
+    width:100%;
+    margin:0px;
+    padding:0px;
+}
+#score, #level, #timer {
+margin-right:30px;
+
+}
+
+#help_button {
+margin-right:50px;
+}
+
+#timer {
+width:50px;
+height:50px;
+}
+
+.trans_image {
+    background: transparent;
+    width: 50px;
+    height: 50px;
+    margin: 5px;
+}
+
+td {
+    width: 50px;
+    height: 50px;
+}
+tr {
+    height: 50px;
+}
+
+.option_row {
+    margin-bottom: 20px;
+    margin-top:20px;
+}
+
+
+.option_row img{
+    cursor: pointer;
+}
+
+
+.tofill_grid {
+    margin-right: 50px;
+    background-color: white;
+}
+
+.attempt_grid {
+    margin-left: 50px;
+    top:0;
+}
+
+.attempt_grid tr td {
+    min-width: 50px;
+    min-height: 50px;
+}
+
+
+td {
+    margin: 10px;
+}
+
+
+.game_table {
+    background-color: white;
+}
+
+
+
