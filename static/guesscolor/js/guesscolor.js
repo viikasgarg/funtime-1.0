@@ -189,7 +189,7 @@ function update_attempt_table(exact_match, approx_match){
 function checkValue(id){
     var button_pressed = '#img_' +id;
     attempt ++;
-    if(attempt < primary_btns.length){
+    if(attempt <= primary_btns.length){
         $("#primary_"+attempt).attr("src",$(button_pressed).attr('src'));
         selected_values.push(id);
         if (attempt%puzzleValues.length === 0) {
