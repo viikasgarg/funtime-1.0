@@ -19,6 +19,9 @@ body {
   font-size: 21px;
 }
 
+.nav > li > a {
+  padding: 10px 5px;
+}
 /* Customize the nav-justified links to be fill the entire space of the .navbar */
 
 .nav-justified {

@@ -155,7 +155,8 @@ INSTALLED_APPS = (
      'numkundli',
      'dictionary',
      'autocomplete_light',
-     'guesscolor'
+     'guesscolor',
+     '2048'
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (

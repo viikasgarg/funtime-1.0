@@ -22,6 +22,7 @@ urlpatterns = patterns('',
     url(r'^calculator/', include('calculator.urls')),
     url(r'^numkundli/', include('numkundli.urls')),
     url(r'^dictionary/', include('dictionary.urls')),
+    url(r'^2048/', include('2048.urls')),
     # Uncomment the admin/doc line below to enable admin documentation:
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 
