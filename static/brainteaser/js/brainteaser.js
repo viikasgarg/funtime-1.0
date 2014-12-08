@@ -2,9 +2,7 @@ var timer;
 var count = 0;
 var foundCount = 0;
 var puzzleValues;
-// level = size-2
-// score = (size -3)*(size-3)*50
-var level = 1
+var level = 1;
 
 function updateScore(){
     count = 0;
@@ -28,9 +26,7 @@ function nextLevel() {
 }
 
 
-
-
-function simpleStopWatch(value,dialog){
+function simpleStopWatch(value, dialog){
     $("#timer").html(value);
     if(value-- <= 0){
         if(dialog) {
@@ -39,10 +35,11 @@ function simpleStopWatch(value,dialog){
         }
         return 0;
     }else {
-        timer = setTimeout('simpleStopWatch('+value+"," + dialog+')',1000);
+        timer = setTimeout('simpleStopWatch('+value+"," + dialog+')', 1000);
     }
     return 1;
 }
+
 
 function grid(context,size,values,noclick) {
     var div = $(context);
@@ -58,13 +55,13 @@ function grid(context,size,values,noclick) {
         var tr = $('<tr/>');
         for(j=0; j<size; j++) {
             var td = $('<td/>');
-            if (values[i*size+j] == 0) {
+            if (values[i*size+j] === 0) {
                 var id = "btn_" + (i*size+j);
                 if(noclick) {
-                    button = success_btn.replace("%id",id);;
+                    button = success_btn.replace("%id",id);
                 }
                 else {
-                    button = success_btn.replace("%s",(i*size+j)).replace("%id",id);;
+                    button = success_btn.replace("%s",(i*size+j)).replace("%id",id);
                 }
             }
             else {
@@ -89,6 +86,7 @@ function createValues(size,range){
 
     return values;
 }
+
 
 function checkValue(id){
     var button_pressed = '#btn_' +id;
@@ -118,16 +116,16 @@ function createPuzzle(context,size) {
 
 $.fn.extend({
     brainteaser: function(size){
-                    puzzleValues = createPuzzle(this,size);
+                    puzzleValues = createPuzzle(this, size);
                     var context = this;
                     var side = size;
                     setTimeout(function createPlayingBoard() {
                                         clearTimeout(timer);
-                                        values = createValues(side*side,1);
-                                        grid(context,side,values,false);
-                                        timer = simpleStopWatch(side*2,true); // for open dialog
+                                        values = createValues(side*side, 1);
+                                        grid(context, side, values, false);
+                                        timer = simpleStopWatch(side*2, true); // for open dialog
                                     } ,
-                                size*1000);
+                                size*2000);
 
         }
 });
