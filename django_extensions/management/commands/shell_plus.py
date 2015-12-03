@@ -49,19 +49,23 @@ class Command(NoArgsCommand):
                 pass
 
             class PrintQueryWrapper(util.CursorDebugWrapper):
+
                 def execute(self, sql, params=()):
                     starttime = time.time()
                     try:
                         return self.cursor.execute(sql, params)
                     finally:
                         execution_time = time.time() - starttime
-                        raw_sql = self.db.ops.last_executed_query(self.cursor, sql, params)
+                        raw_sql = self.db.ops.last_executed_query(
+                            self.cursor, sql, params)
                         if sqlparse:
                             print(sqlparse.format(raw_sql, reindent=True))
                         else:
                             print(raw_sql)
                         print("")
-                        print('Execution time: %.6fs [Database: %s]' % (execution_time, self.db.alias))
+                        print(
+                            'Execution time: %.6fs [Database: %s]' %
+                            (execution_time, self.db.alias))
                         print("")
 
             util.CursorDebugWrapper = PrintQueryWrapper
@@ -70,7 +74,9 @@ class Command(NoArgsCommand):
             from django.conf import settings
             from IPython.frontend.html.notebook import notebookapp
             app = notebookapp.NotebookApp.instance()
-            ipython_arguments = getattr(settings, 'IPYTHON_ARGUMENTS', ['--ext', 'django_extensions.management.notebook_extension'])
+            ipython_arguments = getattr(
+                settings, 'IPYTHON_ARGUMENTS', [
+                    '--ext', 'django_extensions.management.notebook_extension'])
             app.initialize(ipython_arguments)
             app.start()
 
@@ -87,7 +93,8 @@ class Command(NoArgsCommand):
                 # We don't have to wrap the following import in a 'try', because
                 # we already know 'readline' was imported successfully.
                 import rlcompleter
-                readline.set_completer(rlcompleter.Completer(imported_objects).complete)
+                readline.set_completer(
+                    rlcompleter.Completer(imported_objects).complete)
                 readline.parse_and_bind("tab:complete")
 
             # We want to honor both $PYTHONSTARTUP and .pythonrc.py, so follow system
@@ -98,7 +105,12 @@ class Command(NoArgsCommand):
                     global_ns = {}
                     with open(pythonrc) as rcfile:
                         try:
-                            six.exec_(compile(rcfile.read(), pythonrc, 'exec'), global_ns)
+                            six.exec_(
+                                compile(
+                                    rcfile.read(),
+                                    pythonrc,
+                                    'exec'),
+                                global_ns)
                             imported_objects.update(global_ns)
                         except NameError:
                             pass
@@ -150,7 +162,10 @@ class Command(NoArgsCommand):
             except ImportError:
                 import traceback
                 traceback.print_exc()
-                print(self.style.ERROR("Could not load '%s' Python environment." % SETTINGS_SHELL_PLUS))
+                print(
+                    self.style.ERROR(
+                        "Could not load '%s' Python environment." %
+                        SETTINGS_SHELL_PLUS))
         else:
             for shell_name, func in shells:
                 try:
@@ -162,5 +177,5 @@ class Command(NoArgsCommand):
             else:
                 import traceback
                 traceback.print_exc()
-                print(self.style.ERROR("Could not load any interactive Python environment."))
-
+                print(
+                    self.style.ERROR("Could not load any interactive Python environment."))

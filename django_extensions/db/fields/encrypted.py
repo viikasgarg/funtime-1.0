@@ -21,15 +21,18 @@ class BaseEncryptedField(models.Field):
 
     def __init__(self, *args, **kwargs):
         if not hasattr(settings, 'ENCRYPTED_FIELD_KEYS_DIR'):
-            raise ImproperlyConfigured('You must set the ENCRYPTED_FIELD_KEYS_DIR setting to your Keyczar keys directory.')
+            raise ImproperlyConfigured(
+                'You must set the ENCRYPTED_FIELD_KEYS_DIR setting to your Keyczar keys directory.')
         self.crypt = keyczar.Crypter.Read(settings.ENCRYPTED_FIELD_KEYS_DIR)
 
         # Encrypted size is larger than unencrypted
         self.unencrypted_length = max_length = kwargs.get('max_length', None)
         if max_length:
-            max_length = len(self.prefix) + len(self.crypt.Encrypt('x' * max_length))
+            max_length = len(self.prefix) + \
+                len(self.crypt.Encrypt('x' * max_length))
             # TODO: Re-examine if this logic will actually make a large-enough
-            # max-length for unicode strings that have non-ascii characters in them.
+            # max-length for unicode strings that have non-ascii characters in
+            # them.
             kwargs['max_length'] = max_length
 
         super(BaseEncryptedField, self).__init__(*args, **kwargs)
@@ -49,7 +52,7 @@ class BaseEncryptedField(models.Field):
         if value and not value.startswith(self.prefix):
             # We need to encode a unicode string into a byte string, first.
             # keyczar expects a bytestring, not a unicode string.
-            if type(value) == six.types.UnicodeType:
+            if isinstance(value, six.types.UnicodeType):
                 value = value.encode('utf-8')
             # Truncated encrypted content is unreadable,
             # so truncate before encryption
@@ -107,4 +110,3 @@ class EncryptedCharField(BaseEncryptedField):
         args, kwargs = introspector(self)
         # That's our definition!
         return (field_class, args, kwargs)
-

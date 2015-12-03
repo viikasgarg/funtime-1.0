@@ -7,10 +7,12 @@ try:
         raise ImportError
 except ImportError:
     class EncryptedCharField(object):
+
         def __init__(self, *args, **kwargs):
             pass
 
     class EncryptedTextField(object):
+
         def __init__(self, *args, **kwargs):
             pass
 
@@ -33,4 +35,3 @@ class Person(models.Model):
     age = models.PositiveIntegerField()
     children = models.ManyToManyField('self')
     notes = models.ManyToManyField(Note)
-

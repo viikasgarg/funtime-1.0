@@ -8,8 +8,13 @@ from django_extensions.tests.management_command import CommandTest, ShowTemplate
 
 
 __test_classes__ = [
-    DumpScriptTests, JsonFieldTest, UUIDFieldTest, AutoSlugFieldTest, CommandTest, ShowTemplateTagsTests, TruncateLetterTests
-]
+    DumpScriptTests,
+    JsonFieldTest,
+    UUIDFieldTest,
+    AutoSlugFieldTest,
+    CommandTest,
+    ShowTemplateTagsTests,
+    TruncateLetterTests]
 
 try:
     from django_extensions.tests.encrypted_fields import EncryptedFieldsTestCase

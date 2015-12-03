@@ -61,7 +61,13 @@ def orm_item_locator(orm_obj):
     original_pk_name = pk_name
     pk_value = getattr(orm_obj, pk_name)
 
-    while hasattr(pk_value, "_meta") and hasattr(pk_value._meta, "pk") and hasattr(pk_value._meta.pk, "name"):
+    while hasattr(
+            pk_value,
+            "_meta") and hasattr(
+            pk_value._meta,
+            "pk") and hasattr(
+                pk_value._meta.pk,
+            "name"):
         the_class = pk_value._meta.object_name
         pk_name = pk_value._meta.pk.name
         pk_value = getattr(pk_value, pk_name)
@@ -70,7 +76,8 @@ def orm_item_locator(orm_obj):
 
     for key in clean_dict:
         v = clean_dict[key]
-        if v is not None and not isinstance(v, (six.string_types, six.integer_types, float, datetime.datetime)):
+        if v is not None and not isinstance(
+                v, (six.string_types, six.integer_types, float, datetime.datetime)):
             clean_dict[key] = u"%s" % v
 
     output = """ locate_object(%s, "%s", %s, "%s", %s, %s ) """ % (
@@ -95,7 +102,8 @@ class Command(BaseCommand):
         context = {}
 
         # Create a dumpscript object and let it format itself as a string
-        self.stdout.write(str(Script(models=models, context=context, stdout=self.stdout, stderr=self.stderr)))
+        self.stdout.write(str(
+            Script(models=models, context=context, stdout=self.stdout, stderr=self.stderr)))
         self.stdout.write("\n")
 
 
@@ -117,7 +125,8 @@ def get_models(app_labels):
     # If no app labels are given, return all
     if not app_labels:
         for app in get_apps():
-            models += [m for m in get_all_models(app) if m not in EXCLUDED_MODELS]
+            models += [m for m in get_all_models(app)
+                       if m not in EXCLUDED_MODELS]
 
     # Get all relevant apps
     for app_label in app_labels:
@@ -127,7 +136,9 @@ def get_models(app_labels):
             models.append(get_model(app_label, model_name))
         # Get all models for a given app
         else:
-            models += [m for m in get_all_models(get_app(app_label)) if m not in EXCLUDED_MODELS]
+            models += [
+                m for m in get_all_models(
+                    get_app(app_label)) if m not in EXCLUDED_MODELS]
 
     return models
 
@@ -155,7 +166,9 @@ class Code(object):
         """
         if self.imports:
             self.stderr.write(repr(self.import_lines))
-            return flatten_blocks([""] + self.import_lines + [""] + self.lines, num_indents=self.indent)
+            return flatten_blocks(
+                [""] + self.import_lines + [""] + self.lines,
+                num_indents=self.indent)
         else:
             return flatten_blocks(self.lines, num_indents=self.indent)
 
@@ -163,7 +176,9 @@ class Code(object):
         """ Takes the stored imports and converts them to lines
         """
         if self.imports:
-            return ["from %s import %s" % (value, key) for key, value in self.imports.items()]
+            return [
+                "from %s import %s" %
+                (value, key) for key, value in self.imports.items()]
         else:
             return []
     import_lines = property(get_import_lines)
@@ -194,7 +209,12 @@ class ModelCode(Code):
         code = []
 
         for counter, item in enumerate(self.model._default_manager.all()):
-            instance = InstanceCode(instance=item, id=counter + 1, context=self.context, stdout=self.stdout, stderr=self.stderr)
+            instance = InstanceCode(
+                instance=item,
+                id=counter + 1,
+                context=self.context,
+                stdout=self.stdout,
+                stderr=self.stderr)
             self.instances.append(instance)
             if instance.waiting_list:
                 code += instance.lines
@@ -216,7 +236,12 @@ class InstanceCode(Code):
     def __init__(self, instance, id, context=None, stdout=None, stderr=None):
         """ We need the instance in question and an id """
 
-        super(InstanceCode, self).__init__(indent=0, stdout=stdout, stderr=stderr)
+        super(
+            InstanceCode,
+            self).__init__(
+            indent=0,
+            stdout=stdout,
+            stderr=stderr)
         self.imports = {}
 
         self.instance = instance
@@ -232,7 +257,8 @@ class InstanceCode(Code):
 
         self.many_to_many_waiting_list = {}
         for field in self.model._meta.many_to_many:
-            self.many_to_many_waiting_list[field] = list(getattr(self.instance, field.name).all())
+            self.many_to_many_waiting_list[field] = list(
+                getattr(self.instance, field.name).all())
 
     def get_lines(self, force=False):
         """ Returns a list of lists or strings, representing the code body.
@@ -264,7 +290,9 @@ class InstanceCode(Code):
         # Print the save command for our new object
         # e.g. model_name_35.save()
         if code_lines:
-            code_lines.append("%s = save_or_locate(%s)\n" % (self.variable_name, self.variable_name))
+            code_lines.append(
+                "%s = save_or_locate(%s)\n" %
+                (self.variable_name, self.variable_name))
 
         code_lines += self.get_many_to_many_lines(force=force)
 
@@ -306,7 +334,8 @@ class InstanceCode(Code):
 
         if get_skip_version() == 1:
             try:
-                # Django trunk since r7722 uses CollectedObjects instead of dict
+                # Django trunk since r7722 uses CollectedObjects instead of
+                # dict
                 from django.db.models.query import CollectedObjects
                 sub_objects = CollectedObjects()
             except ImportError:
@@ -338,7 +367,8 @@ class InstanceCode(Code):
             # since this instance isn't explicitly created, it's variable name
             # can't be referenced in the script, so record None in context dict
             pk_name = self.instance._meta.pk.name
-            key = '%s_%s' % (self.model.__name__, getattr(self.instance, pk_name))
+            key = '%s_%s' % (self.model.__name__,
+                             getattr(self.instance, pk_name))
             self.context[key] = None
             self.skip_me = True
         else:
@@ -352,12 +382,14 @@ class InstanceCode(Code):
         code_lines = []
 
         if not self.instantiated:
-            code_lines.append("%s = %s()" % (self.variable_name, self.model.__name__))
+            code_lines.append("%s = %s()" %
+                              (self.variable_name, self.model.__name__))
             self.instantiated = True
 
             # Store our variable name for future foreign key references
             pk_name = self.instance._meta.pk.name
-            key = '%s_%s' % (self.model.__name__, getattr(self.instance, pk_name))
+            key = '%s_%s' % (self.model.__name__,
+                             getattr(self.instance, pk_name))
             self.context[key] = self.variable_name
 
         return code_lines
@@ -370,9 +402,12 @@ class InstanceCode(Code):
         # Process normal fields
         for field in list(self.waiting_list):
             try:
-                # Find the value, add the line, remove from waiting list and move on
-                value = get_attribute_value(self.instance, field, self.context, force=force)
-                code_lines.append('%s.%s = %s' % (self.variable_name, field.name, value))
+                # Find the value, add the line, remove from waiting list and
+                # move on
+                value = get_attribute_value(
+                    self.instance, field, self.context, force=force)
+                code_lines.append('%s.%s = %s' %
+                                  (self.variable_name, field.name, value))
                 self.waiting_list.remove(field)
             except SkipValue:
                 # Remove from the waiting list and move on
@@ -393,15 +428,21 @@ class InstanceCode(Code):
             for rel_item in list(rel_items):
                 try:
                     pk_name = rel_item._meta.pk.name
-                    key = '%s_%s' % (rel_item.__class__.__name__, getattr(rel_item, pk_name))
+                    key = '%s_%s' % (rel_item.__class__.__name__,
+                                     getattr(rel_item, pk_name))
                     value = "%s" % self.context[key]
-                    lines.append('%s.%s.add(%s)' % (self.variable_name, field.name, value))
+                    lines.append(
+                        '%s.%s.add(%s)' %
+                        (self.variable_name, field.name, value))
                     self.many_to_many_waiting_list[field].remove(rel_item)
                 except KeyError:
                     if force:
                         item_locator = orm_item_locator(rel_item)
-                        self.context["__extra_imports"][rel_item._meta.object_name] = rel_item.__module__
-                        lines.append('%s.%s.add( %s )' % (self.variable_name, field.name, item_locator))
+                        self.context["__extra_imports"][
+                            rel_item._meta.object_name] = rel_item.__module__
+                        lines.append(
+                            '%s.%s.add( %s )' %
+                            (self.variable_name, field.name, item_locator))
                         self.many_to_many_waiting_list[field].remove(rel_item)
 
         if lines:
@@ -444,8 +485,15 @@ class Script(Code):
             model = models.pop(0)
 
             # If the model is ready to be processed, add it to the list
-            if check_dependencies(model, model_queue, context["__avaliable_models"]):
-                model_class = ModelCode(model=model, context=context, stdout=self.stdout, stderr=self.stderr)
+            if check_dependencies(
+                    model,
+                    model_queue,
+                    context["__avaliable_models"]):
+                model_class = ModelCode(
+                    model=model,
+                    context=context,
+                    stdout=self.stdout,
+                    stderr=self.stderr)
                 model_queue.append(model_class)
 
             # Otherwise put the model back at the end of the list
@@ -459,8 +507,14 @@ class Script(Code):
             if number_remaining_models == previous_number_remaining_models:
                 allowed_cycles -= 1
                 if allowed_cycles <= 0:
-                    # Add the remaining models, but do not remove them from the model list
-                    missing_models = [ModelCode(model=m, context=context, stdout=self.stdout, stderr=self.stderr) for m in models]
+                    # Add the remaining models, but do not remove them from the
+                    # model list
+                    missing_models = [
+                        ModelCode(
+                            model=m,
+                            context=context,
+                            stdout=self.stdout,
+                            stderr=self.stderr) for m in models]
                     model_queue += missing_models
                     # Replace the models with the model class objects
                     # (sure, this is a little bit of hackery)
@@ -478,7 +532,8 @@ class Script(Code):
         code = [self.FILE_HEADER.strip()]
 
         # Queue and process the required models
-        for model_class in self._queue_models(self.models, context=self.context):
+        for model_class in self._queue_models(
+                self.models, context=self.context):
             msg = 'Processing model: %s\n' % model_class.model.__name__
             self.stderr.write(msg)
             code.append("    #" + msg)
@@ -499,7 +554,8 @@ class Script(Code):
         code.insert(2, "")
         for key, value in self.context["__extra_imports"].items():
             code.insert(2, "    from %s import %s" % (value, key))
-        code.insert(2 + len(self.context["__extra_imports"]), self.locate_object_function)
+        code.insert(
+            2 + len(self.context["__extra_imports"]), self.locate_object_function)
 
         return code
 
@@ -590,7 +646,7 @@ def run():
 
 
 # HELPER FUNCTIONS
-#-------------------------------------------------------------------------------
+#-------------------------------------------------------------------------
 
 def flatten_blocks(lines, num_indents=-1):
     """ Takes a list (block) or string (statement) and flattens it into a string
@@ -618,17 +674,22 @@ def get_attribute_value(item, field, context, force=False):
     try:
         value = getattr(item, field.name)
     except ObjectDoesNotExist:
-        raise SkipValue('Could not find object for %s.%s, ignoring.\n' % (item.__class__.__name__, field.name))
+        raise SkipValue(
+            'Could not find object for %s.%s, ignoring.\n' %
+            (item.__class__.__name__, field.name))
 
-    # AutoField: We don't include the auto fields, they'll be automatically recreated
+    # AutoField: We don't include the auto fields, they'll be automatically
+    # recreated
     if isinstance(field, AutoField):
         raise SkipValue()
 
-    # Some databases (eg MySQL) might store boolean values as 0/1, this needs to be cast as a bool
+    # Some databases (eg MySQL) might store boolean values as 0/1, this needs
+    # to be cast as a bool
     elif isinstance(field, BooleanField) and value is not None:
         return repr(bool(value))
 
-    # Post file-storage-refactor, repr() on File/ImageFields no longer returns the path
+    # Post file-storage-refactor, repr() on File/ImageFields no longer returns
+    # the path
     elif isinstance(field, FileField):
         return repr(force_unicode(value))
 
@@ -640,7 +701,8 @@ def get_attribute_value(item, field, context, force=False):
         # automatically.
         # NB: Not sure if "is" will always work
         if field.rel.to is ContentType:
-            return 'ContentType.objects.get(app_label="%s", model="%s")' % (value.app_label, value.model)
+            return 'ContentType.objects.get(app_label="%s", model="%s")' % (
+                value.app_label, value.model)
 
         # Generate an identifier (key) for this foreign object
         pk_name = value._meta.pk.name
@@ -655,11 +717,14 @@ def get_attribute_value(item, field, context, force=False):
             # Return the variable name listed in the context
             return "%s" % variable_name
         elif value.__class__ not in context["__avaliable_models"] or force:
-            context["__extra_imports"][value._meta.object_name] = value.__module__
+            context["__extra_imports"][
+                value._meta.object_name] = value.__module__
             item_locator = orm_item_locator(value)
             return item_locator
         else:
-            raise DoLater('(FK) %s.%s\n' % (item.__class__.__name__, field.name))
+            raise DoLater(
+                '(FK) %s.%s\n' %
+                (item.__class__.__name__, field.name))
 
     # A normal field (e.g. a python built-in)
     else:
@@ -677,8 +742,10 @@ def make_clean_dict(the_dict):
 def check_dependencies(model, model_queue, avaliable_models):
     " Check that all the depenedencies for this model are already in the queue. "
 
-    # A list of allowed links: existing fields, itself and the special case ContentType
-    allowed_links = [m.model.__name__ for m in model_queue] + [model.__name__, 'ContentType']
+    # A list of allowed links: existing fields, itself and the special case
+    # ContentType
+    allowed_links = [m.model.__name__ for m in model_queue] + \
+        [model.__name__, 'ContentType']
 
     # For each ForeignKey or ManyToMany field, check that a link is possible
 
@@ -696,7 +763,7 @@ def check_dependencies(model, model_queue, avaliable_models):
 
 
 # EXCEPTIONS
-#-------------------------------------------------------------------------------
+#-------------------------------------------------------------------------
 
 class SkipValue(Exception):
     """ Value could not be parsed or should simply be skipped. """

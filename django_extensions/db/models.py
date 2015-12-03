@@ -45,6 +45,7 @@ class ActivatorModelManager(models.Manager):
     """ ActivatorModelManager
     Manager to return instances of ActivatorModel: SomeModel.objects.active() / .inactive()
     """
+
     def active(self):
         """ Returns active instances of ActivatorModel: SomeModel.objects.active() """
         return self.get_query_set().filter(status=ActivatorModel.ACTIVE_STATUS)
@@ -63,9 +64,16 @@ class ActivatorModel(models.Model):
         (INACTIVE_STATUS, _('Inactive')),
         (ACTIVE_STATUS, _('Active')),
     )
-    status = models.IntegerField(_('status'), choices=STATUS_CHOICES, default=ACTIVE_STATUS)
-    activate_date = models.DateTimeField(blank=True, null=True, help_text=_('keep empty for an immediate activation'))
-    deactivate_date = models.DateTimeField(blank=True, null=True, help_text=_('keep empty for indefinite activation'))
+    status = models.IntegerField(
+        _('status'),
+        choices=STATUS_CHOICES,
+        default=ACTIVE_STATUS)
+    activate_date = models.DateTimeField(
+        blank=True,
+        null=True,
+        help_text=_('keep empty for an immediate activation'))
+    deactivate_date = models.DateTimeField(
+        blank=True, null=True, help_text=_('keep empty for indefinite activation'))
     objects = ActivatorModelManager()
 
     class Meta:

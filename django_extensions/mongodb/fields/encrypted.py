@@ -9,7 +9,8 @@ from django.conf import settings
 try:
     from keyczar import keyczar
 except ImportError:
-    raise ImportError('Using an encrypted field requires the Keyczar module.  You can obtain Keyczar from http://www.keyczar.org/.')
+    raise ImportError(
+        'Using an encrypted field requires the Keyczar module.  You can obtain Keyczar from http://www.keyczar.org/.')
 
 
 class BaseEncryptedField(BaseField):
@@ -17,7 +18,8 @@ class BaseEncryptedField(BaseField):
 
     def __init__(self, *args, **kwargs):
         if not hasattr(settings, 'ENCRYPTED_FIELD_KEYS_DIR'):
-            raise ImproperlyConfigured('You must set settings.ENCRYPTED_FIELD_KEYS_DIR to your Keyczar keys directory.')
+            raise ImproperlyConfigured(
+                'You must set settings.ENCRYPTED_FIELD_KEYS_DIR to your Keyczar keys directory.')
         self.crypt = keyczar.Crypter.Read(settings.ENCRYPTED_FIELD_KEYS_DIR)
         super(BaseEncryptedField, self).__init__(*args, **kwargs)
 
@@ -36,6 +38,7 @@ class BaseEncryptedField(BaseField):
 
 
 class EncryptedTextField(BaseEncryptedField):
+
     def get_internal_type(self):
         return 'StringField'
 
@@ -46,11 +49,17 @@ class EncryptedTextField(BaseEncryptedField):
 
 
 class EncryptedCharField(BaseEncryptedField):
+
     def __init__(self, max_length=None, *args, **kwargs):
         if max_length:
             max_length += len(self.prefix)
 
-        super(EncryptedCharField, self).__init__(max_length=max_length, *args, **kwargs)
+        super(
+            EncryptedCharField,
+            self).__init__(
+            max_length=max_length,
+            *args,
+            **kwargs)
 
     def get_internal_type(self):
         return "StringField"

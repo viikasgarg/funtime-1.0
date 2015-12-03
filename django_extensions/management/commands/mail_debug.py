@@ -13,6 +13,7 @@ logger = getLogger(__name__)
 class ExtensionDebuggingServer(SMTPServer):
     """Duplication of smtpd.DebuggingServer, but using logging instead of print."""
     # Do something with the gathered message
+
     def process_message(self, peer, mailfrom, rcpttos, data):
         """Output will be sent to the module logger at INFO level."""
         inheaders = 1
@@ -29,11 +30,17 @@ class ExtensionDebuggingServer(SMTPServer):
 
 class Command(BaseCommand):
     option_list = BaseCommand.option_list + (
-        make_option('--output', dest='output_file', default=None,
-                    help='Specifies an output file to send a copy of all messages (not flushed immediately).'),
-        make_option('--use-settings', dest='use_settings',
-                    action='store_true', default=False,
-                    help='Uses EMAIL_HOST and HOST_PORT from Django settings.'),
+        make_option(
+            '--output',
+            dest='output_file',
+            default=None,
+            help='Specifies an output file to send a copy of all messages (not flushed immediately).'),
+        make_option(
+            '--use-settings',
+            dest='use_settings',
+            action='store_true',
+            default=False,
+            help='Uses EMAIL_HOST and HOST_PORT from Django settings.'),
     )
     help = "Starts a test mail server for development."
     args = '[optional port number or ippaddr:port]'
@@ -65,11 +72,19 @@ class Command(BaseCommand):
             port = int(port)
 
         # Add console handler
-        setup_logger(logger, stream=self.stdout, filename=options.get('output_file', None))
+        setup_logger(
+            logger,
+            stream=self.stdout,
+            filename=options.get(
+                'output_file',
+                None))
 
         def inner_run():
-            quit_command = (sys.platform == 'win32') and 'CTRL-BREAK' or 'CONTROL-C'
-            print("Now accepting mail at %s:%s -- use %s to quit" % (addr, port, quit_command))
+            quit_command = (
+                sys.platform == 'win32') and 'CTRL-BREAK' or 'CONTROL-C'
+            print(
+                "Now accepting mail at %s:%s -- use %s to quit" %
+                (addr, port, quit_command))
 
             ExtensionDebuggingServer((addr, port), None)
             asyncore.loop()

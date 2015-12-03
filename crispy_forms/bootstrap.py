@@ -21,22 +21,44 @@ class AppendedText(Field):
         super(AppendedText, self).__init__(field, *args, **kwargs)
 
     def render(self, form, form_style, context, template_pack='bootstrap'):
-        context.update({'crispy_appended_text': self.text, 'active': getattr(self, "active", False)})
-        return render_field(self.field, form, form_style, context, template=self.template, attrs=self.attrs, template_pack=template_pack)
+        context.update({'crispy_appended_text': self.text,
+                        'active': getattr(self, "active", False)})
+        return render_field(
+            self.field,
+            form,
+            form_style,
+            context,
+            template=self.template,
+            attrs=self.attrs,
+            template_pack=template_pack)
 
 
 class PrependedText(AppendedText):
     template = "bootstrap/layout/prepended_text.html"
 
     def render(self, form, form_style, context, template_pack='bootstrap'):
-        context.update({'crispy_prepended_text': self.text, 'active': getattr(self, "active", False)})
-        return render_field(self.field, form, form_style, context, template=self.template, attrs=self.attrs, template_pack=template_pack)
+        context.update({'crispy_prepended_text': self.text,
+                        'active': getattr(self, "active", False)})
+        return render_field(
+            self.field,
+            form,
+            form_style,
+            context,
+            template=self.template,
+            attrs=self.attrs,
+            template_pack=template_pack)
 
 
 class PrependedAppendedText(Field):
     template = "bootstrap/layout/appended_prepended_text.html"
 
-    def __init__(self, field, prepended_text=None, appended_text=None, *args, **kwargs):
+    def __init__(
+            self,
+            field,
+            prepended_text=None,
+            appended_text=None,
+            *args,
+            **kwargs):
         self.field = field
         self.appended_text = appended_text
         self.prepended_text = prepended_text
@@ -49,10 +71,18 @@ class PrependedAppendedText(Field):
         context.update({'crispy_appended_text': self.appended_text,
                         'crispy_prepended_text': self.prepended_text,
                         'active': getattr(self, "active", False)})
-        return render_field(self.field, form, form_style, context, template=self.template, attrs=self.attrs, template_pack=template_pack)
+        return render_field(
+            self.field,
+            form,
+            form_style,
+            context,
+            template=self.template,
+            attrs=self.attrs,
+            template_pack=template_pack)
 
 
 class AppendedPrependedText(PrependedAppendedText):
+
     def __init__(self, *args, **kwargs):
         warnings.warn("AppendedPrependedText has been renamed to PrependedAppendedText, \
             it will be removed in 1.3.0", PendingDeprecationWarning)
@@ -82,9 +112,11 @@ class FormActions(LayoutObject):
     def render(self, form, form_style, context, template_pack='bootstrap'):
         html = u''
         for field in self.fields:
-            html += render_field(field, form, form_style, context, template_pack=template_pack)
+            html += render_field(field, form, form_style,
+                                 context, template_pack=template_pack)
 
-        return render_to_string(self.template, Context({'formactions': self, 'fields_output': html}))
+        return render_to_string(self.template, Context(
+            {'formactions': self, 'fields_output': html}))
 
     def flat_attrs(self):
         return flatatt(self.attrs)
@@ -129,8 +161,12 @@ class FieldWithButtons(Div):
         # We first render the buttons
         buttons = ''
         for field in self.fields[1:]:
-            buttons += render_field(field, form, form_style, context,
-                'bootstrap/layout/field.html', layout_object=self)
+            buttons += render_field(field,
+                                    form,
+                                    form_style,
+                                    context,
+                                    'bootstrap/layout/field.html',
+                                    layout_object=self)
 
         context.update({'div': self, 'buttons': buttons})
 
@@ -138,9 +174,14 @@ class FieldWithButtons(Div):
             # FieldWithButtons(Field('field_name'), StrictButton("go"))
             # We render the field passing its name and attributes
             return render_field(self.fields[0][0], form, form_style, context,
-                self.template, attrs=self.fields[0].attrs)
+                                self.template, attrs=self.fields[0].attrs)
         else:
-            return render_field(self.fields[0], form, form_style, context, self.template)
+            return render_field(
+                self.fields[0],
+                form,
+                form_style,
+                context,
+                self.template)
 
 
 class StrictButton(object):
@@ -159,10 +200,10 @@ class StrictButton(object):
         kwargs.setdefault('type', 'button')
 
         # We turn css_id and css_class into id and class
-        if kwargs.has_key('css_id'):
+        if 'css_id' in kwargs:
             kwargs['id'] = kwargs.pop('css_id')
         kwargs['class'] = self.field_classes
-        if kwargs.has_key('css_class'):
+        if 'css_class' in kwargs:
             kwargs['class'] += " %s" % kwargs.pop('css_class')
 
         self.flat_attrs = flatatt(kwargs)
@@ -194,7 +235,9 @@ class Tab(Div):
         """
         check if field_name is contained within tab.
         """
-        return field_name in map(lambda pointer: pointer[1], self.get_field_names())
+        return field_name in map(
+            lambda pointer: pointer[1],
+            self.get_field_names())
 
     def render_link(self):
         """
@@ -236,5 +279,5 @@ class TabHolder(Div):
             content += render_field(tab, form, form_style, context,
                                     template_pack=template_pack)
             links += tab.render_link()
-        return render_to_string(self.template,
-            Context({'tabs': self, 'links': links, 'content': content}))
+        return render_to_string(self.template, Context(
+            {'tabs': self, 'links': links, 'content': content}))

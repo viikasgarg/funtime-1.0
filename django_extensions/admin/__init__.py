@@ -17,6 +17,7 @@ from django.db.models.query import QuerySet
 from django.utils.encoding import smart_str
 from django.utils.translation import ugettext as _
 from django.utils.text import get_text_list
+from functools import reduce
 try:
     from functools import update_wrapper
     assert update_wrapper
@@ -69,7 +70,10 @@ class ForeignKeyAutocompleteAdmin(ModelAdmin):
 
         info = self.model._meta.app_label, self.model._meta.module_name
 
-        urlpatterns = patterns('', url(r'foreignkey_autocomplete/$', wrap(self.foreignkey_autocomplete), name='%s_%s_autocomplete' % info))
+        urlpatterns = patterns('',
+                               url(r'foreignkey_autocomplete/$',
+                                   wrap(self.foreignkey_autocomplete),
+                                   name='%s_%s_autocomplete' % info))
         urlpatterns += super(ForeignKeyAutocompleteAdmin, self).get_urls()
         return urlpatterns
 
@@ -103,10 +107,12 @@ class ForeignKeyAutocompleteAdmin(ModelAdmin):
             data = ''
             if query:
                 for bit in query.split():
-                    or_queries = [models.Q(**{construct_search(smart_str(field_name)): smart_str(bit)}) for field_name in search_fields.split(',')]
+                    or_queries = [models.Q(**{construct_search(smart_str(field_name)): smart_str(
+                        bit)}) for field_name in search_fields.split(',')]
                     other_qs = QuerySet(model)
                     other_qs.dup_select_related(queryset)
-                    other_qs = other_qs.filter(reduce(operator.or_, or_queries))
+                    other_qs = other_qs.filter(
+                        reduce(operator.or_, or_queries))
                     queryset = queryset & other_qs
                 data = ''.join([u'%s|%s\n' % (
                     to_string_function(f), f.pk) for f in queryset])
@@ -127,7 +133,8 @@ class ForeignKeyAutocompleteAdmin(ModelAdmin):
                 'model_name': model_name,
                 'field_list': get_text_list(searchable_fields, _('and')),
             }
-            return _('Use the left field to do %(model_name)s lookups in the fields %(field_list)s.') % help_kwargs
+            return _(
+                'Use the left field to do %(model_name)s lookups in the fields %(field_list)s.') % help_kwargs
         return ''
 
     def formfield_for_dbfield(self, db_field, **kwargs):
@@ -135,11 +142,17 @@ class ForeignKeyAutocompleteAdmin(ModelAdmin):
         Overrides the default widget for Foreignkey fields if they are
         specified in the related_search_fields class attribute.
         """
-        if (isinstance(db_field, models.ForeignKey) and db_field.name in self.related_search_fields):
+        if (isinstance(db_field, models.ForeignKey)
+                and db_field.name in self.related_search_fields):
             model_name = db_field.rel.to._meta.object_name
             help_text = self.get_help_text(db_field.name, model_name)
             if kwargs.get('help_text'):
                 help_text = u'%s %s' % (kwargs['help_text'], help_text)
-            kwargs['widget'] = ForeignKeySearchInput(db_field.rel, self.related_search_fields[db_field.name])
+            kwargs['widget'] = ForeignKeySearchInput(
+                db_field.rel, self.related_search_fields[db_field.name])
             kwargs['help_text'] = help_text
-        return super(ForeignKeyAutocompleteAdmin, self).formfield_for_dbfield(db_field, **kwargs)
+        return super(
+            ForeignKeyAutocompleteAdmin,
+            self).formfield_for_dbfield(
+            db_field,
+            **kwargs)

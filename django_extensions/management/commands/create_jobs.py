@@ -24,12 +24,16 @@ def copy_template(template_name, copy_to):
     import django_extensions
     import shutil
 
-    template_dir = os.path.join(django_extensions.__path__[0], 'conf', template_name)
+    template_dir = os.path.join(
+        django_extensions.__path__[0],
+        'conf',
+        template_name)
 
     # walks the template structure and copies it
     for d, subdirs, files in os.walk(template_dir):
         relative_dir = d[len(template_dir) + 1:]
-        if relative_dir and not os.path.exists(os.path.join(copy_to, relative_dir)):
+        if relative_dir and not os.path.exists(
+                os.path.join(copy_to, relative_dir)):
             os.mkdir(os.path.join(copy_to, relative_dir))
         for i, subdir in enumerate(subdirs):
             if subdir.startswith('.'):
@@ -53,4 +57,6 @@ def copy_template(template_name, copy_to):
                 shutil.copymode(path_old, path_new)
                 _make_writeable(path_new)
             except OSError:
-                sys.stderr.write("Notice: Couldn't set permission bits on %s. You're probably using an uncommon filesystem setup. No problem.\n" % path_new)
+                sys.stderr.write(
+                    "Notice: Couldn't set permission bits on %s. You're probably using an uncommon filesystem setup. No problem.\n" %
+                    path_new)

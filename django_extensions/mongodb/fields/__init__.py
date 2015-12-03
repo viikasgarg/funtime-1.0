@@ -60,6 +60,7 @@ class AutoSlugField(SlugField):
     Inspired by SmileyChris' Unique Slugify snippet:
     http://www.djangosnippets.org/snippets/690/
     """
+
     def __init__(self, *args, **kwargs):
         kwargs.setdefault('blank', True)
         kwargs.setdefault('editable', False)
@@ -96,8 +97,10 @@ class AutoSlugField(SlugField):
 
         if add or self.overwrite:
             # slugify the original field content and set next step to 2
-            slug_for_field = lambda field: self.slugify_func(getattr(model_instance, field))
-            slug = self.separator.join(map(slug_for_field, self._populate_from))
+            slug_for_field = lambda field: self.slugify_func(
+                getattr(model_instance, field))
+            slug = self.separator.join(
+                map(slug_for_field, self._populate_from))
             next = 2
         else:
             # get slug from the current model instance and calculate next
@@ -199,7 +202,16 @@ class UUIDField(StringField):
     For more information see: http://docs.python.org/lib/module-uuid.html
     """
 
-    def __init__(self, verbose_name=None, name=None, auto=True, version=1, node=None, clock_seq=None, namespace=None, **kwargs):
+    def __init__(
+            self,
+            verbose_name=None,
+            name=None,
+            auto=True,
+            version=1,
+            node=None,
+            clock_seq=None,
+            namespace=None,
+            **kwargs):
         kwargs['max_length'] = 36
         self.auto = auto
         self.version = version
@@ -214,7 +226,8 @@ class UUIDField(StringField):
 
     def contribute_to_class(self, cls, name):
         if self.primary_key:
-            assert not cls._meta.has_auto_field, "A model can't have more than one AutoField: %s %s %s; have %s" % (self, cls, name, cls._meta.auto_field)
+            assert not cls._meta.has_auto_field, "A model can't have more than one AutoField: %s %s %s; have %s" % (
+                self, cls, name, cls._meta.auto_field)
             super(UUIDField, self).contribute_to_class(cls, name)
             cls._meta.has_auto_field = True
             cls._meta.auto_field = self
@@ -233,7 +246,9 @@ class UUIDField(StringField):
         elif self.version == 5:
             return uuid.uuid5(self.namespace, self.name)
         else:
-            raise UUIDVersionError("UUID version %s is not valid." % self.version)
+            raise UUIDVersionError(
+                "UUID version %s is not valid." %
+                self.version)
 
     def pre_save(self, model_instance, add):
         if self.auto and add:

@@ -31,7 +31,8 @@ class Command(NoArgsCommand):
         make_option('--exclude-groups', dest='exclude_groups', default=None,
                     help='Exclude users matching this group. (use comma seperation for multiple groups)'),
     )
-    help = '''DEBUG only: give all users a new email based on their account data ("%s" by default). Possible parameters are: username, first_name, last_name''' % (DEFAULT_FAKE_EMAIL, )
+    help = '''DEBUG only: give all users a new email based on their account data ("%s" by default). Possible parameters are: username, first_name, last_name''' % (
+        DEFAULT_FAKE_EMAIL, )
     requires_model_validation = False
 
     def handle_noargs(self, **options):
@@ -57,13 +58,17 @@ class Command(NoArgsCommand):
             if groups:
                 users = users.exclude(groups__in=groups)
             else:
-                raise CommandError("No group matches filter: %s" % exclude_groups)
+                raise CommandError(
+                    "No group matches filter: %s" %
+                    exclude_groups)
         if include_groups:
             groups = Group.objects.filter(name__in=include_groups.split(","))
             if groups:
                 users = users.filter(groups__in=groups)
             else:
-                raise CommandError("No groups matches filter: %s" % include_groups)
+                raise CommandError(
+                    "No groups matches filter: %s" %
+                    include_groups)
         if exclude_regexp:
             users = users.exclude(username__regex=exclude_regexp)
         if include_regexp:

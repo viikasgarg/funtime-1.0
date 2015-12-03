@@ -48,6 +48,7 @@ parse_template.is_safe = True
 
 
 class CodeNode(Node):
+
     def __init__(self, language, nodelist, name=''):
         self.language = Variable(language)
         self.nodelist = nodelist

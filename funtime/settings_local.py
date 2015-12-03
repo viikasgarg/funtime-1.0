@@ -11,12 +11,16 @@ MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'funtime',                      # Or path to database file if using sqlite3.
+        # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        # Or path to database file if using sqlite3.
+        'NAME': 'funtime',
         'USER': 'vikas',                      # Not used with sqlite3.
         'PASSWORD': 'garg88',                  # Not used with sqlite3.
-        'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': '5432',                      # Set to empty string for default. Not used with sqlite3.
+        # Set to empty string for localhost. Not used with sqlite3.
+        'HOST': '',
+        # Set to empty string for default. Not used with sqlite3.
+        'PORT': '5432',
     }
 
 }
@@ -90,7 +94,7 @@ STATICFILES_DIRS = (
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-#    'django.contrib.staticfiles.finders.DefaultStorageFinder',
+    #    'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
 
 # Make this unique, and don't share it with anybody.
@@ -99,14 +103,15 @@ SECRET_KEY = '7#e!d9^t012(dc%eacf5-!q%lo1@v$7zl3%32kn%xh5%$duyq)'
 
 # Global date validators, to help prevent data entry errors
 import datetime
-from django.core.validators import MinValueValidator # Could use MaxValueValidator too
-DATE_VALIDATORS=[MinValueValidator(datetime.date(1970,1,1))] # Unix epoch!
+# Could use MaxValueValidator too
+from django.core.validators import MinValueValidator
+DATE_VALIDATORS = [MinValueValidator(datetime.date(1970, 1, 1))]  # Unix epoch!
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
     'django.template.loaders.app_directories.Loader',
-#     'django.template.loaders.eggs.Loader',
+    #     'django.template.loaders.eggs.Loader',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -138,35 +143,35 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    ## DB base menu generation
+    # DB base menu generation
     'menu',
     'django_para',
     'main',
     'django_extensions',
     'crispy_forms',
     # Uncomment the next line to enable the admin:
-     'django.contrib.admin',
+    'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
-     'sudokusolver',
-     'brainteaser',
-     'calculator',
-     'numkundli',
-     'dictionary',
-     'autocomplete_light',
-     'guesscolor',
-     '2048'
+    'sudokusolver',
+    'brainteaser',
+    'calculator',
+    'numkundli',
+    'dictionary',
+    'autocomplete_light',
+    'guesscolor',
+    '2048'
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
-                "django.contrib.auth.context_processors.auth",
-                "django.core.context_processors.debug",
-                "django.core.context_processors.i18n",
-                "django.core.context_processors.media",
-                "django.core.context_processors.static",
-                "django.contrib.messages.context_processors.messages",
-                "django.core.context_processors.request"
-                )
+    "django.contrib.auth.context_processors.auth",
+    "django.core.context_processors.debug",
+    "django.core.context_processors.i18n",
+    "django.core.context_processors.media",
+    "django.core.context_processors.static",
+    "django.contrib.messages.context_processors.messages",
+    "django.core.context_processors.request"
+)
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
 # the site admins on every HTTP 500 error when DEBUG=False.
@@ -196,18 +201,11 @@ LOGGING = {
     }
 }
 
-
-
-    # Parse database configuration from $DATABASE_URL
+# Parse database configuration from $DATABASE_URL
 if not DEBUG:
     import dj_database_url
-    DATABASES['default'] =  dj_database_url.config()
+    DATABASES['default'] = dj_database_url.config()
 
 # Honor the 'X-Forwarded-Proto' header for request.is_secure()
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 STATIC_ROOT = 'staticfiles'
-
-
-
-
-

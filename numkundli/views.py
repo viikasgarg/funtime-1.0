@@ -42,6 +42,8 @@ def know(request):
         {'error': error})
 
 '''
+
+
 class KundliFormView(View):
     form_class = KundliForm
     template_name = 'numkundli.html'
@@ -54,15 +56,15 @@ class KundliFormView(View):
         form = self.form_class(request.POST)
         if form.is_valid():
             # <process form cleaned data>
-            ## algo
+            # algo
             first_name = form.cleaned_data['first_name']
             middle_name = form.cleaned_data['middle_name']
             last_name = form.cleaned_data['last_name']
             birthday = form.cleaned_data['birthday']
             info = NumKundliInfo(birthday, first_name, middle_name, last_name)
-            title = first_name + " " + middle_name + " " + last_name + " [ " + \
-                    birthday.strftime("%d %B %Y (%A)") + " ]"
+            title = first_name + " " + middle_name + " " + last_name + \
+                " [ " + birthday.strftime("%d %B %Y (%A)") + " ]"
 
-            return render(request, 'info.html', {'info': info, 'title':title})
+            return render(request, 'info.html', {'info': info, 'title': title})
 
         return render(request, self.template_name, {'form': form})

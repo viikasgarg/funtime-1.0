@@ -19,6 +19,7 @@ from django.utils import simplejson
 
 
 class JSONEncoder(simplejson.JSONEncoder):
+
     def default(self, obj):
         if isinstance(obj, Decimal):
             return str(obj)
@@ -46,6 +47,7 @@ class JSONDict(dict):
     Hack so repr() called by dumpdata will output JSON instead of
     Python formatted data.  This way fixtures will work!
     """
+
     def __repr__(self):
         return dumps(self)
 
@@ -54,6 +56,7 @@ class JSONList(list):
     """
     As above
     """
+
     def __repr__(self):
         return dumps(self)
 
@@ -90,10 +93,15 @@ class JSONField(models.TextField):
     def get_db_prep_save(self, value, connection):
         """Convert our JSON object to a string before we save"""
         if not isinstance(value, (list, dict)):
-            return super(JSONField, self).get_db_prep_save("", connection=connection)
+            return super(
+                JSONField, self).get_db_prep_save(
+                "", connection=connection)
         else:
-            return super(JSONField, self).get_db_prep_save(dumps(value),
-                                                           connection=connection)
+            return super(
+                JSONField,
+                self).get_db_prep_save(
+                dumps(value),
+                connection=connection)
 
     def south_field_triple(self):
         "Returns a suitable description of this field for South."

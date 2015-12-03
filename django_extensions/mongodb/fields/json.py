@@ -19,6 +19,7 @@ from mongoengine.fields import StringField
 
 
 class JSONEncoder(simplejson.JSONEncoder):
+
     def default(self, obj):
         if isinstance(obj, Decimal):
             return str(obj)
@@ -34,7 +35,10 @@ def dumps(value):
 
 
 def loads(txt):
-    value = simplejson.loads(txt, parse_float=Decimal, encoding=settings.DEFAULT_CHARSET)
+    value = simplejson.loads(
+        txt,
+        parse_float=Decimal,
+        encoding=settings.DEFAULT_CHARSET)
     assert isinstance(value, dict)
     return value
 
@@ -44,6 +48,7 @@ class JSONDict(dict):
     Hack so repr() called by dumpdata will output JSON instead of
     Python formatted data.  This way fixtures will work!
     """
+
     def __repr__(self):
         return dumps(self)
 
@@ -74,4 +79,3 @@ class JSONField(StringField):
             return super(JSONField, self).get_db_prep_save("")
         else:
             return super(JSONField, self).get_db_prep_save(dumps(value))
-

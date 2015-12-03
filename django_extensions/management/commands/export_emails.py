@@ -23,10 +23,20 @@ def full_name(first_name, last_name, username, **extra):
 
 class Command(BaseCommand):
     option_list = BaseCommand.option_list + (
-        make_option('--group', '-g', action='store', dest='group', default=None,
-                    help='Limit to users which are part of the supplied group name'),
-        make_option('--format', '-f', action='store', dest='format', default=FORMATS[0],
-                    help="output format. May be one of '" + "', '".join(FORMATS) + "'."),
+        make_option(
+            '--group',
+            '-g',
+            action='store',
+            dest='group',
+            default=None,
+            help='Limit to users which are part of the supplied group name'),
+        make_option(
+            '--format',
+            '-f',
+            action='store',
+            dest='format',
+            default=FORMATS[0],
+            help="output format. May be one of '" + "', '".join(FORMATS) + "'."),
     )
 
     help = ("Export user email address list in one of a number of formats.")
@@ -42,10 +52,15 @@ class Command(BaseCommand):
             raise CommandError("extra arguments supplied")
         group = options['group']
         if group and not Group.objects.filter(name=group).count() == 1:
-            names = u"', '".join(g['name'] for g in Group.objects.values('name')).encode('utf-8')
+            names = u"', '".join(
+                g['name'] for g in Group.objects.values('name')).encode('utf-8')
             if names:
                 names = "'" + names + "'."
-            raise CommandError("Unknown group '" + group + "'. Valid group names are: " + names)
+            raise CommandError(
+                "Unknown group '" +
+                group +
+                "'. Valid group names are: " +
+                names)
         if len(args) and args[0] != '-':
             outfile = open(args[0], 'w')
         else:
@@ -69,7 +84,11 @@ class Command(BaseCommand):
         """simpler single entry with email only in the format of:
             my@address.com,
         """
-        out.write(u",\n".join(u'%s' % (ent['email']) for ent in qs).encode(self.encoding))
+        out.write(
+            u",\n".join(
+                u'%s' %
+                (ent['email']) for ent in qs).encode(
+                self.encoding))
         out.write("\n")
 
     def google(self, qs, out):
@@ -85,10 +104,27 @@ class Command(BaseCommand):
         """CSV format suitable for importing into outlook
         """
         csvf = writer(out)
-        columns = ['Name', 'E-mail Address', 'Notes', 'E-mail 2 Address', 'E-mail 3 Address',
-                   'Mobile Phone', 'Pager', 'Company', 'Job Title', 'Home Phone', 'Home Phone 2',
-                   'Home Fax', 'Home Address', 'Business Phone', 'Business Phone 2',
-                   'Business Fax', 'Business Address', 'Other Phone', 'Other Fax', 'Other Address']
+        columns = [
+            'Name',
+            'E-mail Address',
+            'Notes',
+            'E-mail 2 Address',
+            'E-mail 3 Address',
+            'Mobile Phone',
+            'Pager',
+            'Company',
+            'Job Title',
+            'Home Phone',
+            'Home Phone 2',
+            'Home Fax',
+            'Home Address',
+            'Business Phone',
+            'Business Phone 2',
+            'Business Fax',
+            'Business Address',
+            'Other Phone',
+            'Other Fax',
+            'Other Address']
         csvf.writerow(columns)
         empty = [''] * (len(columns) - 2)
         for ent in qs:
@@ -110,17 +146,20 @@ class Command(BaseCommand):
         try:
             import vobject
         except ImportError:
-            print(self.style.ERROR("Please install python-vobject to use the vcard export format."))
+            print(self.style.ERROR(
+                "Please install python-vobject to use the vcard export format."))
             import sys
             sys.exit(1)
         for ent in qs:
             card = vobject.vCard()
             card.add('fn').value = full_name(**ent)
             if not ent['last_name'] and not ent['first_name']:
-                # fallback to fullname, if both first and lastname are not declared
+                # fallback to fullname, if both first and lastname are not
+                # declared
                 card.add('n').value = vobject.vcard.Name(full_name(**ent))
             else:
-                card.add('n').value = vobject.vcard.Name(ent['last_name'], ent['first_name'])
+                card.add('n').value = vobject.vcard.Name(
+                    ent['last_name'], ent['first_name'])
             emailpart = card.add('email')
             emailpart.value = ent['email']
             emailpart.type_param = 'INTERNET'

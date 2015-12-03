@@ -22,7 +22,9 @@ class Command(LabelCommand):
             job = get_job(app_name, job_name)
         except KeyError:
             if app_name:
-                print("Error: Job %s for applabel %s not found" % (app_name, job_name))
+                print(
+                    "Error: Job %s for applabel %s not found" %
+                    (app_name, job_name))
             else:
                 print("Error: Job %s not found" % job_name)
             print("Use -l option to view all the available jobs")
@@ -47,14 +49,24 @@ class Command(LabelCommand):
             print_jobs(only_scheduled=False, show_when=True, show_appname=True)
         else:
             if not job_name:
-                print("Run a single maintenance job. Please specify the name of the job.")
+                print(
+                    "Run a single maintenance job. Please specify the name of the job.")
                 return
             self.runjob(app_name, job_name, options)
 
 # Backwards compatibility for Django r9110
 if not [opt for opt in Command.option_list if opt.dest == 'verbosity']:
     Command.option_list += (
-        make_option('--verbosity', '-v', action="store", dest="verbosity",
-                    default='1', type='choice', choices=['0', '1', '2'],
-                    help="Verbosity level; 0=minimal output, 1=normal output, 2=all output"),
+        make_option(
+            '--verbosity',
+            '-v',
+            action="store",
+            dest="verbosity",
+            default='1',
+            type='choice',
+            choices=[
+                '0',
+                '1',
+                '2'],
+            help="Verbosity level; 0=minimal output, 1=normal output, 2=all output"),
     )

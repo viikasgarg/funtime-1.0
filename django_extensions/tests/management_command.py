@@ -36,6 +36,7 @@ class MockLoggingHandler(logging.Handler):
 
 
 class CommandTest(TestCase):
+
     def test_error_logging(self):
         # Ensure command errors are properly logged and reraised
         from django_extensions.management.base import logger
@@ -49,6 +50,7 @@ class CommandTest(TestCase):
 
 
 class ShowTemplateTagsTests(TestCase):
+
     def test_some_output(self):
         out = StringIO()
         call_command('show_templatetags', stdout=out)

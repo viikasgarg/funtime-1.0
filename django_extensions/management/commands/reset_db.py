@@ -64,7 +64,9 @@ class Command(BaseCommand):
         if django.get_version() >= "1.2":
             got_db_settings = self.set_db_settings(*args, **options)
             if not got_db_settings:
-                raise CommandError("You are using Django %s which requires to specify the db-router.\nPlease specify the router by adding --router=<routername> to this command." % django.get_version())
+                raise CommandError(
+                    "You are using Django %s which requires to specify the db-router.\nPlease specify the router by adding --router=<routername> to this command." %
+                    django.get_version())
                 return
 
         verbosity = int(options.get('verbosity', 1))
@@ -114,8 +116,11 @@ Type 'yes' to continue, or 'no' to cancel: """ % (settings.DATABASE_NAME,))
 
             connection = Database.connect(**kwargs)
             drop_query = 'DROP DATABASE IF EXISTS `%s`' % settings.DATABASE_NAME
-            utf8_support = options.get('no_utf8_support', False) and '' or 'CHARACTER SET utf8'
-            create_query = 'CREATE DATABASE `%s` %s' % (settings.DATABASE_NAME, utf8_support)
+            utf8_support = options.get(
+                'no_utf8_support',
+                False) and '' or 'CHARACTER SET utf8'
+            create_query = 'CREATE DATABASE `%s` %s' % (
+                settings.DATABASE_NAME, utf8_support)
             logging.info('Executing... "' + drop_query + '"')
             connection.query(drop_query)
             logging.info('Executing... "' + create_query + '"')
@@ -129,7 +134,8 @@ Type 'yes' to continue, or 'no' to cancel: """ % (settings.DATABASE_NAME,))
 
             if settings.DATABASE_NAME == '':
                 from django.core.exceptions import ImproperlyConfigured
-                raise ImproperlyConfigured("You need to specify DATABASE_NAME in your Django settings file.")
+                raise ImproperlyConfigured(
+                    "You need to specify DATABASE_NAME in your Django settings file.")
 
             database_name = options.get('dbname', 'template1')
             if options.get('dbname') is None:
@@ -155,7 +161,8 @@ Type 'yes' to continue, or 'no' to cancel: """ % (settings.DATABASE_NAME,))
             except Database.ProgrammingError as e:
                 logging.info("Error: %s" % str(e))
 
-            # Encoding should be SQL_ASCII (7-bit postgres default) or prefered UTF8 (8-bit)
+            # Encoding should be SQL_ASCII (7-bit postgres default) or prefered
+            # UTF8 (8-bit)
             create_query = "CREATE DATABASE %s" % settings.DATABASE_NAME
             if settings.DATABASE_USER:
                 create_query += " WITH OWNER = %s " % settings.DATABASE_USER

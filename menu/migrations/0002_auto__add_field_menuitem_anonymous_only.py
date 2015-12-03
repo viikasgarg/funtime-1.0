@@ -4,19 +4,23 @@ from south.db import db
 from south.v2 import SchemaMigration
 from django.db import models
 
+
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        
-        # Adding field 'MenuItem.anonymous_only'
-        db.add_column('menu_menuitem', 'anonymous_only', self.gf('django.db.models.fields.BooleanField')(default=False), keep_default=False)
 
+        # Adding field 'MenuItem.anonymous_only'
+        db.add_column(
+            'menu_menuitem',
+            'anonymous_only',
+            self.gf('django.db.models.fields.BooleanField')(
+                default=False),
+            keep_default=False)
 
     def backwards(self, orm):
-        
+
         # Deleting field 'MenuItem.anonymous_only'
         db.delete_column('menu_menuitem', 'anonymous_only')
-
 
     models = {
         'menu.menu': {

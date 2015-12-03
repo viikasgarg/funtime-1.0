@@ -77,7 +77,10 @@ class Command(BaseCommand):
                 if silent:
                     return
                 if verbosity > 0:
-                    print(ERROR("Exception while running run() in '%s'" % mod.__name__))
+                    print(
+                        ERROR(
+                            "Exception while running run() in '%s'" %
+                            mod.__name__))
                 if show_traceback:
                     raise
 
@@ -95,17 +98,20 @@ class Command(BaseCommand):
                 return False
 
             t = __import__(mod, [], [], [" "])
-            #if verbosity > 1:
+            # if verbosity > 1:
             #    print(NOTICE("Found script %s ..." % mod))
             if hasattr(t, "run"):
                 if verbosity > 1:
                     print(NOTICE2("Found script '%s' ..." % mod))
-                #if verbosity > 1:
+                # if verbosity > 1:
                 #    print(NOTICE("found run() in %s. executing..." % mod))
                 return t
             else:
                 if verbosity > 1:
-                    print(ERROR2("Find script '%s' but no run() function found." % mod))
+                    print(
+                        ERROR2(
+                            "Find script '%s' but no run() function found." %
+                            mod))
 
         def find_modules_for_script(script):
             """ find script module which contains 'run' attribute """
@@ -152,7 +158,16 @@ class Command(BaseCommand):
 # Backwards compatibility for Django r9110
 if not [opt for opt in Command.option_list if opt.dest == 'verbosity']:
     Command.option_list += (
-        make_option('--verbosity', '-v', action="store", dest="verbosity",
-                    default='1', type='choice', choices=['0', '1', '2'],
-                    help="Verbosity level; 0=minimal output, 1=normal output, 2=all output"),
+        make_option(
+            '--verbosity',
+            '-v',
+            action="store",
+            dest="verbosity",
+            default='1',
+            type='choice',
+            choices=[
+                '0',
+                '1',
+                '2'],
+            help="Verbosity level; 0=minimal output, 1=normal output, 2=all output"),
     )

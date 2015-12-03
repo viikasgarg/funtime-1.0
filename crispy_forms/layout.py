@@ -11,7 +11,10 @@ from .exceptions import DynamicError
 TEMPLATE_PACK = getattr(settings, 'CRISPY_TEMPLATE_PACK', 'bootstrap')
 
 print TEMPLATE_PACK
+
+
 class LayoutObject(object):
+
     def __getitem__(self, slice):
         return self.fields[slice]
 
@@ -71,13 +74,20 @@ class LayoutObject(object):
                 if len(LayoutClasses) == 1 and LayoutClasses[0] == basestring:
                     pointers.append([index + [i], layout_object])
                 else:
-                    pointers.append([index + [i], layout_object.__class__.__name__.lower()])
+                    pointers.append([index + [i],
+                                     layout_object.__class__.__name__.lower()])
 
             # If it's a layout object and we haven't reached the max depth limit or greedy
             # we recursive call
-            if hasattr(layout_object, 'get_field_names') and (len(index) < max_level or greedy):
-                new_kwargs = {'index': index + [i], 'max_level': max_level, 'greedy': greedy}
-                pointers = pointers + layout_object.get_layout_objects(*LayoutClasses, **new_kwargs)
+            if hasattr(
+                    layout_object, 'get_field_names') and (
+                    len(index) < max_level or greedy):
+                new_kwargs = {
+                    'index': index + [i],
+                    'max_level': max_level,
+                    'greedy': greedy}
+                pointers = pointers + \
+                    layout_object.get_layout_objects(*LayoutClasses, **new_kwargs)
 
         return pointers
 
@@ -114,6 +124,7 @@ class Layout(LayoutObject):
 
         helper.add_layout(layout)
     """
+
     def __init__(self, *fields):
         self.fields = list(fields)
 
@@ -126,10 +137,11 @@ class Layout(LayoutObject):
 
 
 class LayoutSlice(object):
+
     def __init__(self, layout, key):
         self.layout = layout
         if isinstance(key, (int, long)):
-            self.slice = slice(key, key+1, 1)
+            self.slice = slice(key, key + 1, 1)
         else:
             self.slice = key
 
@@ -158,10 +170,12 @@ class LayoutSlice(object):
         """
         if isinstance(self.slice, slice):
             for i in range(*self.slice.indices(len(self.layout.fields))):
-                self.layout.fields[i] = self.wrapped_object(LayoutClass, self.layout.fields[i], *args, **kwargs)
+                self.layout.fields[i] = self.wrapped_object(
+                    LayoutClass, self.layout.fields[i], *args, **kwargs)
 
         elif isinstance(self.slice, list):
-            # A list of pointers  Ex: [[[0, 0], 'div'], [[0, 2, 3], 'field_name']]
+            # A list of pointers  Ex: [[[0, 0], 'div'], [[0, 2, 3],
+            # 'field_name']]
             for pointer in self.slice:
                 position = pointer[0]
 
@@ -184,11 +198,11 @@ class LayoutSlice(object):
                         # Otherwise it's a basestring (a field name)
                         else:
                             self.layout.fields[position[0]] = self.wrapped_object(
-                                LayoutClass, layout_object, *args, **kwargs
-                            )
+                                LayoutClass, layout_object, *args, **kwargs)
                     except IndexError:
                         # We could avoid this exception, recalculating pointers.
-                        # However this case is most of the time an undesired behavior
+                        # However this case is most of the time an undesired
+                        # behavior
                         raise DynamicError("Trying to wrap a field within an already wrapped field, \
                             recheck your filter or layout")
 
@@ -203,13 +217,16 @@ class LayoutSlice(object):
                 LayoutClass, self.layout.fields[self.slice], *args, **kwargs
             )
 
-            # The rest of places of the slice are removed, as they are included in the previous
-            for i in reversed(range(*self.slice.indices(len(self.layout.fields)))):
+            # The rest of places of the slice are removed, as they are included
+            # in the previous
+            for i in reversed(
+                    range(*self.slice.indices(len(self.layout.fields)))):
                 if i != self.slice.start:
                     del self.layout.fields[i]
 
         elif isinstance(self.slice, list):
-            raise DynamicError("wrap_together doesn't work with filter, only with [] operator")
+            raise DynamicError(
+                "wrap_together doesn't work with filter, only with [] operator")
 
 
 class ButtonHolder(LayoutObject):
@@ -240,7 +257,8 @@ class ButtonHolder(LayoutObject):
             html += render_field(field, form, form_style,
                                  context, template_pack=template_pack)
 
-        return render_to_string(self.template, Context({'buttonholder': self, 'fields_output': html}))
+        return render_to_string(self.template, Context(
+            {'buttonholder': self, 'fields_output': html}))
 
 
 class BaseInput(object):
@@ -255,7 +273,7 @@ class BaseInput(object):
         self.id = kwargs.get('css_id', '')
         self.attrs = {}
 
-        if kwargs.has_key('css_class'):
+        if 'css_class' in kwargs:
             self.field_classes += ' %s' % kwargs.pop('css_class')
 
         self.template = kwargs.pop('template', self.template)
@@ -353,7 +371,8 @@ class Fieldset(LayoutObject):
         legend = ''
         if self.legend:
             legend = u'%s' % Template(unicode(self.legend)).render(context)
-        return render_to_string(self.template, Context({'fieldset': self, 'legend': legend, 'fields': fields, 'form_style': form_style}))
+        return render_to_string(self.template, Context(
+            {'fieldset': self, 'legend': legend, 'fields': fields, 'form_style': form_style}))
 
 
 class MultiField(LayoutObject):
@@ -374,15 +393,22 @@ class MultiField(LayoutObject):
     def render(self, form, form_style, context, template_pack=TEMPLATE_PACK):
         # If a field within MultiField contains errors
         if context['form_show_errors']:
-            for field in map(lambda pointer: pointer[1], self.get_field_names()):
+            for field in map(
+                    lambda pointer: pointer[1],
+                    self.get_field_names()):
                 if field in form.errors:
                     self.css_class += " error"
 
         fields_output = u''
         for field in self.fields:
-            fields_output += render_field(field, form, form_style, context,
-                self.field_template, self.label_class, layout_object=self,
-                template_pack=template_pack)
+            fields_output += render_field(field,
+                                          form,
+                                          form_style,
+                                          context,
+                                          self.field_template,
+                                          self.label_class,
+                                          layout_object=self,
+                                          template_pack=template_pack)
 
         context.update({'multifield': self, 'fields_output': fields_output})
         return render_to_string(self.template, context)
@@ -401,7 +427,7 @@ class Div(LayoutObject):
     def __init__(self, *fields, **kwargs):
         self.fields = list(fields)
 
-        if hasattr(self, 'css_class') and kwargs.has_key('css_class'):
+        if hasattr(self, 'css_class') and 'css_class' in kwargs:
             self.css_class += ' %s' % kwargs.pop('css_class')
         if not hasattr(self, 'css_class'):
             self.css_class = kwargs.pop('css_class', None)
@@ -413,9 +439,11 @@ class Div(LayoutObject):
     def render(self, form, form_style, context, template_pack=TEMPLATE_PACK):
         fields = ''
         for field in self.fields:
-            fields += render_field(field, form, form_style, context, template_pack=template_pack)
+            fields += render_field(field, form, form_style,
+                                   context, template_pack=template_pack)
 
-        return render_to_string(self.template, Context({'div': self, 'fields': fields}))
+        return render_to_string(self.template, Context(
+            {'div': self, 'fields': fields}))
 
 
 class Row(Div):
@@ -471,7 +499,7 @@ class Field(LayoutObject):
         if not hasattr(self, 'attrs'):
             self.attrs = {}
 
-        if kwargs.has_key('css_class'):
+        if 'css_class' in kwargs:
             if 'class' in self.attrs:
                 self.attrs['class'] += " %s" % kwargs.pop('css_class')
             else:
@@ -479,13 +507,21 @@ class Field(LayoutObject):
 
         self.template = kwargs.pop('template', self.template)
 
-        # We use kwargs as HTML attributes, turning data_id='test' into data-id='test'
-        self.attrs.update(dict([(k.replace('_', '-'), conditional_escape(v)) for k,v in kwargs.items()]))
+        # We use kwargs as HTML attributes, turning data_id='test' into
+        # data-id='test'
+        self.attrs.update(
+            dict([(k.replace('_', '-'), conditional_escape(v)) for k, v in kwargs.items()]))
 
     def render(self, form, form_style, context, template_pack=TEMPLATE_PACK):
         html = ''
         for field in self.fields:
-            html += render_field(field, form, form_style, context, template=self.template, attrs=self.attrs, template_pack=template_pack)
+            html += render_field(field,
+                                 form,
+                                 form_style,
+                                 context,
+                                 template=self.template,
+                                 attrs=self.attrs,
+                                 template_pack=template_pack)
         return html
 
 
@@ -506,6 +542,7 @@ class MultiWidgetField(Field):
 
     .. note:: To override widget's css class use ``class`` not ``css_class``.
     """
+
     def __init__(self, *args, **kwargs):
         self.fields = list(args)
         self.attrs = kwargs.pop('attrs', {})

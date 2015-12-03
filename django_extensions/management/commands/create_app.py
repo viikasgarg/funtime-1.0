@@ -14,17 +14,32 @@ from optparse import make_option
 
 class Command(LabelCommand):
     option_list = LabelCommand.option_list + (
-        make_option('--template', '-t', action='store', dest='app_template',
-                    help='The path to the app template'),
-        make_option('--parent_path', '-p', action='store', dest='parent_path',
-                    help='The parent path of the application to be created'),
-        make_option('-d', action='store_true', dest='dia_parse',
-                    help='Generate model.py and admin.py from [APP_NAME].dia file'),
-        make_option('--diagram', action='store', dest='dia_path',
-                    help='The diagram path of the app to be created. -d is implied'),
+        make_option(
+            '--template',
+            '-t',
+            action='store',
+            dest='app_template',
+            help='The path to the app template'),
+        make_option(
+            '--parent_path',
+            '-p',
+            action='store',
+            dest='parent_path',
+            help='The parent path of the application to be created'),
+        make_option(
+            '-d',
+            action='store_true',
+            dest='dia_parse',
+            help='Generate model.py and admin.py from [APP_NAME].dia file'),
+        make_option(
+            '--diagram',
+            action='store',
+            dest='dia_path',
+            help='The diagram path of the app to be created. -d is implied'),
     )
 
-    help = ("Creates an application directory structure for the specified application name.")
+    help = (
+        "Creates an application directory structure for the specified application name.")
     args = "APP_NAME"
     label = 'application name'
 
@@ -35,25 +50,41 @@ class Command(LabelCommand):
         project_dir = os.getcwd()
         project_name = os.path.split(project_dir)[-1]
         app_name = label
-        app_template = options.get('app_template') or os.path.join(django_extensions.__path__[0], 'conf', 'app_template')
-        app_dir = os.path.join(options.get('parent_path') or project_dir, app_name)
-        dia_path = options.get('dia_path') or os.path.join(project_dir, '%s.dia' % app_name)
+        app_template = options.get('app_template') or os.path.join(
+            django_extensions.__path__[0], 'conf', 'app_template')
+        app_dir = os.path.join(
+            options.get('parent_path') or project_dir, app_name)
+        dia_path = options.get('dia_path') or os.path.join(
+            project_dir, '%s.dia' % app_name)
 
         if not os.path.exists(app_template):
-            raise CommandError("The template path, %r, does not exist." % app_template)
+            raise CommandError(
+                "The template path, %r, does not exist." %
+                app_template)
 
         if not re.search(r'^\w+$', label):
-            raise CommandError("%r is not a valid application name. Please use only numbers, letters and underscores." % label)
+            raise CommandError(
+                "%r is not a valid application name. Please use only numbers, letters and underscores." %
+                label)
 
         dia_parse = options.get('dia_path') or options.get('dia_parse')
         if dia_parse:
             if not os.path.exists(dia_path):
-                raise CommandError("The diagram path, %r, does not exist." % dia_path)
+                raise CommandError(
+                    "The diagram path, %r, does not exist." %
+                    dia_path)
             if app_name in settings.INSTALLED_APPS:
-                raise CommandError("The application %s should not be defined in the settings file. Please remove %s now, and add it after using this command." % (app_name, app_name))
-            tables = [name for name in connection.introspection.table_names() if name.startswith('%s_' % app_name)]
+                raise CommandError(
+                    "The application %s should not be defined in the settings file. Please remove %s now, and add it after using this command." %
+                    (app_name, app_name))
+            tables = [
+                name for name in connection.introspection.table_names() if name.startswith(
+                    '%s_' %
+                    app_name)]
             if tables:
-                raise CommandError("%r application has tables in the database. Please delete them." % app_name)
+                raise CommandError(
+                    "%r application has tables in the database. Please delete them." %
+                    app_name)
 
         try:
             os.makedirs(app_dir)
@@ -63,9 +94,12 @@ class Command(LabelCommand):
         copy_template(app_template, app_dir, project_name, app_name)
 
         if dia_parse:
-            generate_models_and_admin(dia_path, app_dir, project_name, app_name)
+            generate_models_and_admin(
+                dia_path, app_dir, project_name, app_name)
             print("Application %r created." % app_name)
-            print("Please add now %r and any other dependent application in settings.INSTALLED_APPS, and run 'manage syncdb'" % app_name)
+            print(
+                "Please add now %r and any other dependent application in settings.INSTALLED_APPS, and run 'manage syncdb'" %
+                app_name)
 
 
 def copy_template(app_template, copy_to, project_name, app_name):
@@ -76,7 +110,11 @@ def copy_template(app_template, copy_to, project_name, app_name):
     # walks the template structure and copies it
     for d, subdirs, files in os.walk(app_template):
         relative_dir = d[len(app_template) + 1:]
-        d_new = os.path.join(copy_to, relative_dir).replace('app_name', app_name)
+        d_new = os.path.join(
+            copy_to,
+            relative_dir).replace(
+            'app_name',
+            app_name)
         if relative_dir and not os.path.exists(d_new):
             os.mkdir(d_new)
         for i, subdir in enumerate(subdirs):
@@ -104,7 +142,9 @@ def copy_template(app_template, copy_to, project_name, app_name):
                 shutil.copymode(path_old, path_new)
                 _make_writeable(path_new)
             except OSError:
-                sys.stderr.write("Notice: Couldn't set permission bits on %s. You're probably using an uncommon filesystem setup. No problem.\n" % path_new)
+                sys.stderr.write(
+                    "Notice: Couldn't set permission bits on %s. You're probably using an uncommon filesystem setup. No problem.\n" %
+                    path_new)
 
 
 def generate_models_and_admin(dia_path, app_dir, project_name, app_name):
@@ -133,6 +173,10 @@ def generate_models_and_admin(dia_path, app_dir, project_name, app_name):
     open(model_path, 'w').write(models_txt)
 
     classes = re.findall('class (\w+)', models_txt)
-    admin_txt = 'from django.contrib.admin import site, ModelAdmin\n' + format_text('from %s.%s.models import %s' % (project_name, app_name, ', '.join(classes)), indent=True)
-    admin_txt += format_text('\n\n%s' % '\n'.join(map((lambda t: 'site.register(%s)' % t), classes)))
+    admin_txt = 'from django.contrib.admin import site, ModelAdmin\n' + format_text(
+        'from %s.%s.models import %s' %
+        (project_name, app_name, ', '.join(classes)), indent=True)
+    admin_txt += format_text('\n\n%s' %
+                             '\n'.join(map((lambda t: 'site.register(%s)' %
+                                            t), classes)))
     open(admin_path, 'w').write(admin_txt)

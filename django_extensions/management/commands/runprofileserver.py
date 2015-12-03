@@ -42,6 +42,7 @@ def label(code):
 
 
 class KCacheGrind(object):
+
     def __init__(self, profiler):
         self.data = profiler.getstats()
         self.out_file = None
@@ -102,7 +103,8 @@ class KCacheGrind(object):
             out_file.write('calls=%d 0\n' % (subentry.callcount,))
         else:
             out_file.write('cfi=%s\n' % (code.co_filename,))
-            out_file.write('calls=%d %d\n' % (subentry.callcount, code.co_firstlineno))
+            out_file.write('calls=%d %d\n' %
+                           (subentry.callcount, code.co_firstlineno))
 
         totaltime = int(subentry.totaltime * 1000)
         out_file.write('%d %d\n' % (lineno, totaltime))
@@ -125,10 +127,18 @@ class Command(BaseCommand):
     )
     if USE_STATICFILES:
         option_list += (
-            make_option('--nostatic', action="store_false", dest='use_static_handler', default=True,
-                        help='Tells Django to NOT automatically serve static files at STATIC_URL.'),
-            make_option('--insecure', action="store_true", dest='insecure_serving', default=False,
-                        help='Allows serving static files even if DEBUG is False.'),
+            make_option(
+                '--nostatic',
+                action="store_false",
+                dest='use_static_handler',
+                default=True,
+                help='Tells Django to NOT automatically serve static files at STATIC_URL.'),
+            make_option(
+                '--insecure',
+                action="store_true",
+                dest='insecure_serving',
+                default=False,
+                help='Allows serving static files even if DEBUG is False.'),
         )
     help = "Starts a lightweight Web server with profiling enabled."
     args = '[optional port number, or ipaddr:port]'
@@ -165,7 +175,8 @@ class Command(BaseCommand):
         use_reloader = options.get('use_reloader', True)
         shutdown_message = options.get('shutdown_message', '')
         no_media = options.get('no_media', False)
-        quit_command = (sys.platform == 'win32') and 'CTRL-BREAK' or 'CONTROL-C'
+        quit_command = (
+            sys.platform == 'win32') and 'CTRL-BREAK' or 'CONTROL-C'
 
         def inner_run():
             import os
@@ -183,7 +194,8 @@ class Command(BaseCommand):
                     print("cProfile disabled, module cannot be imported!")
                     USE_CPROFILE = False
             if USE_LSPROF and not USE_CPROFILE:
-                raise SystemExit("Kcachegrind compatible output format required cProfile from Python 2.5")
+                raise SystemExit(
+                    "Kcachegrind compatible output format required cProfile from Python 2.5")
             prof_path = options.get('prof_path', '/tmp')
 
             def get_exclude_paths():
@@ -194,7 +206,8 @@ class Command(BaseCommand):
                 static_url = getattr(settings, 'STATIC_URL', None)
                 if static_url:
                     exclude_paths.append(static_url)
-                admin_media_prefix = getattr(settings, 'ADMIN_MEDIA_PREFIX', None)
+                admin_media_prefix = getattr(
+                    settings, 'ADMIN_MEDIA_PREFIX', None)
                 if admin_media_prefix:
                     exclude_paths.append(admin_media_prefix)
                 return exclude_paths
@@ -203,10 +216,13 @@ class Command(BaseCommand):
                 def handler(environ, start_response):
                     path_info = environ['PATH_INFO']
                     # when using something like a dynamic site middleware is could be necessary
-                    # to refetch the exclude_paths every time since they could change per site.
-                    if no_media and any(path_info.startswith(p) for p in get_exclude_paths()):
+                    # to refetch the exclude_paths every time since they could
+                    # change per site.
+                    if no_media and any(path_info.startswith(p)
+                                        for p in get_exclude_paths()):
                         return inner_handler(environ, start_response)
-                    path_name = path_info.strip("/").replace('/', '.') or "root"
+                    path_name = path_info.strip(
+                        "/").replace('/', '.') or "root"
                     profname = "%s.%d.prof" % (path_name, time.time())
                     profname = os.path.join(prof_path, profname)
                     if USE_CPROFILE:
@@ -215,7 +231,8 @@ class Command(BaseCommand):
                         prof = hotshot.Profile(profname)
                     start = datetime.now()
                     try:
-                        return prof.runcall(inner_handler, environ, start_response)
+                        return prof.runcall(
+                            inner_handler, environ, start_response)
                     finally:
                         # seeing how long the request took is important!
                         elap = datetime.now() - start
@@ -225,7 +242,8 @@ class Command(BaseCommand):
                             kg.output(open(profname, 'w'))
                         elif USE_CPROFILE:
                             prof.dump_stats(profname)
-                        profname2 = "%s.%06dms.%d.prof" % (path_name, elapms, time.time())
+                        profname2 = "%s.%06dms.%d.prof" % (
+                            path_name, elapms, time.time())
                         profname2 = os.path.join(prof_path, profname2)
                         if not USE_CPROFILE:
                             prof.close()
@@ -234,24 +252,31 @@ class Command(BaseCommand):
 
             print("Validating models...")
             self.validate(display_num_errors=True)
-            print("\nDjango version %s, using settings %r" % (django.get_version(), settings.SETTINGS_MODULE))
-            print("Development server is running at http://%s:%s/" % (addr, port))
+            print("\nDjango version %s, using settings %r" %
+                  (django.get_version(), settings.SETTINGS_MODULE))
+            print(
+                "Development server is running at http://%s:%s/" %
+                (addr, port))
             print("Quit the server with %s." % quit_command)
             path = options.get('admin_media_path', '')
             if not path:
-                admin_media_path = os.path.join(django.__path__[0], 'contrib/admin/static/admin')
+                admin_media_path = os.path.join(
+                    django.__path__[0], 'contrib/admin/static/admin')
                 if os.path.isdir(admin_media_path):
                     path = admin_media_path
                 else:
-                    path = os.path.join(django.__path__[0], 'contrib/admin/media')
+                    path = os.path.join(
+                        django.__path__[0], 'contrib/admin/media')
             try:
                 handler = WSGIHandler()
                 if HAS_ADMINMEDIAHANDLER:
                     handler = AdminMediaHandler(handler, path)
                 if USE_STATICFILES:
-                    use_static_handler = options.get('use_static_handler', True)
+                    use_static_handler = options.get(
+                        'use_static_handler', True)
                     insecure_serving = options.get('insecure_serving', False)
-                    if (use_static_handler and (settings.DEBUG or insecure_serving)):
+                    if (use_static_handler and (
+                            settings.DEBUG or insecure_serving)):
                         handler = StaticFilesHandler(handler)
                 handler = make_profiler_handler(handler)
                 run(addr, int(port), handler)
@@ -266,8 +291,12 @@ class Command(BaseCommand):
                     error_text = ERRORS[e.args[0].args[0]]
                 except (AttributeError, KeyError):
                     error_text = str(e)
-                sys.stderr.write(self.style.ERROR("Error: %s" % error_text) + '\n')
-                # Need to use an OS exit because sys.exit doesn't work in a thread
+                sys.stderr.write(
+                    self.style.ERROR(
+                        "Error: %s" %
+                        error_text) + '\n')
+                # Need to use an OS exit because sys.exit doesn't work in a
+                # thread
                 os._exit(1)
             except KeyboardInterrupt:
                 if shutdown_message:
@@ -278,4 +307,3 @@ class Command(BaseCommand):
             autoreload.main(inner_run)
         else:
             inner_run()
-

@@ -129,14 +129,20 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
 
         # Check for AWS keys in settings
-        if not hasattr(settings, 'AWS_ACCESS_KEY_ID') or not hasattr(settings, 'AWS_SECRET_ACCESS_KEY'):
-            raise CommandError('Missing AWS keys from settings file.  Please supply both AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY.')
+        if not hasattr(
+                settings,
+                'AWS_ACCESS_KEY_ID') or not hasattr(
+                settings,
+                'AWS_SECRET_ACCESS_KEY'):
+            raise CommandError(
+                'Missing AWS keys from settings file.  Please supply both AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY.')
         else:
             self.AWS_ACCESS_KEY_ID = settings.AWS_ACCESS_KEY_ID
             self.AWS_SECRET_ACCESS_KEY = settings.AWS_SECRET_ACCESS_KEY
 
         if not hasattr(settings, 'AWS_BUCKET_NAME'):
-            raise CommandError('Missing bucket name from settings file. Please add the AWS_BUCKET_NAME to your settings file.')
+            raise CommandError(
+                'Missing bucket name from settings file. Please add the AWS_BUCKET_NAME to your settings file.')
         else:
             if not settings.AWS_BUCKET_NAME:
                 raise CommandError('AWS_BUCKET_NAME cannot be empty.')
@@ -148,7 +154,8 @@ class Command(BaseCommand):
             if not settings.MEDIA_ROOT:
                 raise CommandError('MEDIA_ROOT must be set in your settings.')
 
-        self.AWS_CLOUDFRONT_DISTRIBUTION = getattr(settings, 'AWS_CLOUDFRONT_DISTRIBUTION', '')
+        self.AWS_CLOUDFRONT_DISTRIBUTION = getattr(
+            settings, 'AWS_CLOUDFRONT_DISTRIBUTION', '')
 
         self.SYNC_S3_RENAME_GZIP_EXT = \
             getattr(settings, 'SYNC_S3_RENAME_GZIP_EXT', '.gz')
@@ -218,7 +225,13 @@ class Command(BaseCommand):
         Walks the media directory and syncs files to S3
         """
         bucket, key = self.open_s3()
-        os.path.walk(self.DIRECTORY, self.upload_s3, (bucket, key, self.AWS_BUCKET_NAME, self.DIRECTORY))
+        os.path.walk(
+            self.DIRECTORY,
+            self.upload_s3,
+            (bucket,
+             key,
+             self.AWS_BUCKET_NAME,
+             self.DIRECTORY))
 
     def compress_string(self, s):
         """Gzip a given string."""
@@ -232,7 +245,9 @@ class Command(BaseCommand):
         """
         Opens connection to S3 returning bucket and key
         """
-        conn = boto.connect_s3(self.AWS_ACCESS_KEY_ID, self.AWS_SECRET_ACCESS_KEY)
+        conn = boto.connect_s3(
+            self.AWS_ACCESS_KEY_ID,
+            self.AWS_SECRET_ACCESS_KEY)
         try:
             bucket = conn.get_bucket(self.AWS_BUCKET_NAME)
         except boto.exception.S3ResponseError:
@@ -247,7 +262,8 @@ class Command(BaseCommand):
 
         # Skip directories we don't want to sync
         if os.path.basename(dirname) in self.FILTER_LIST:
-            # prevent walk from processing subfiles/subdirs below the ignored one
+            # prevent walk from processing subfiles/subdirs below the ignored
+            # one
             del names[:]
             return
 
@@ -280,7 +296,9 @@ class Command(BaseCommand):
                     if local_datetime < s3_datetime:
                         self.skip_count += 1
                         if self.verbosity > 1:
-                            print("File %s hasn't been modified since last being uploaded" % file_key)
+                            print(
+                                "File %s hasn't been modified since last being uploaded" %
+                                file_key)
                         continue
 
             # File is newer, let's process and upload
@@ -306,10 +324,13 @@ class Command(BaseCommand):
                             file_key, self.SYNC_S3_RENAME_GZIP_EXT)
                     headers['Content-Encoding'] = 'gzip'
                     if self.verbosity > 1:
-                        print("\tgzipped: %dk to %dk" % (file_size / 1024, len(filedata) / 1024))
+                        print(
+                            "\tgzipped: %dk to %dk" %
+                            (file_size / 1024, len(filedata) / 1024))
             if self.do_expires:
                 # HTTP/1.0
-                headers['Expires'] = '%s GMT' % (email.Utils.formatdate(time.mktime((datetime.datetime.now() + datetime.timedelta(days=365 * 2)).timetuple())))
+                headers['Expires'] = '%s GMT' % (email.Utils.formatdate(time.mktime(
+                    (datetime.datetime.now() + datetime.timedelta(days=365 * 2)).timetuple())))
                 # HTTP/1.1
                 headers['Cache-Control'] = 'max-age %d' % (3600 * 24 * 365 * 2)
                 if self.verbosity > 1:
@@ -334,7 +355,11 @@ class Command(BaseCommand):
 # Backwards compatibility for Django r9110
 if not [opt for opt in Command.option_list if opt.dest == 'verbosity']:
     Command.option_list += (
-        make_option('-v', '--verbosity',
-                    dest='verbosity', default=1, action='count',
-                    help="Verbose mode. Multiple -v options increase the verbosity."),
+        make_option(
+            '-v',
+            '--verbosity',
+            dest='verbosity',
+            default=1,
+            action='count',
+            help="Verbose mode. Multiple -v options increase the verbosity."),
     )

@@ -27,8 +27,12 @@ class ForeignKeySearchInput(ForeignKeyRawIdWidget):
                     'django_extensions/js/jquery.autocomplete.js']
         if django.get_version() < "1.3":
             js_files.append('django_extensions/js/jquery.js')
-        return forms.Media(css={'all': ('django_extensions/css/jquery.autocomplete.css',)},
-                           js=js_files)
+        return forms.Media(
+            css={
+                'all': (
+                    'django_extensions/css/jquery.autocomplete.css',
+                )},
+            js=js_files)
 
     media = property(_media)
 
@@ -57,7 +61,8 @@ class ForeignKeySearchInput(ForeignKeyRawIdWidget):
         related_url = '../../../%s/%s/' % (app_label, model_name)
         params = self.url_parameters()
         if params:
-            url = '?' + '&amp;'.join(['%s=%s' % (k, v) for k, v in params.items()])
+            url = '?' + '&amp;'.join(['%s=%s' % (k, v)
+                                      for k, v in params.items()])
         else:
             url = ''
         if not 'class' in attrs:
@@ -86,10 +91,16 @@ class ForeignKeySearchInput(ForeignKeyRawIdWidget):
             'name': name,
             'pre_django_14': (django.VERSION[:2] < (1, 4)),
         }
-        output.append(render_to_string(self.widget_template or (
-            'django_extensions/widgets/%s/%s/foreignkey_searchinput.html' % (app_label, model_name),
-            'django_extensions/widgets/%s/foreignkey_searchinput.html' % app_label,
-            'django_extensions/widgets/foreignkey_searchinput.html',
-        ), context))
+        output.append(
+            render_to_string(
+                self.widget_template or (
+                    'django_extensions/widgets/%s/%s/foreignkey_searchinput.html' %
+                    (app_label,
+                     model_name),
+                    'django_extensions/widgets/%s/foreignkey_searchinput.html' %
+                    app_label,
+                    'django_extensions/widgets/foreignkey_searchinput.html',
+                ),
+                context))
         output.reverse()
         return mark_safe(u''.join(output))

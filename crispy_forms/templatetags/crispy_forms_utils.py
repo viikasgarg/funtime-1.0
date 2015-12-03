@@ -12,10 +12,12 @@ def selectively_remove_spaces_between_tags(value):
     html = re.sub(r'>\s+<', '><', force_unicode(value))
     html = re.sub(r'</button><', '</button> <', force_unicode(html))
     return re.sub(r'(<input[^>]+>)<', r'\1 <', force_unicode(html))
-selectively_remove_spaces_between_tags = allow_lazy(selectively_remove_spaces_between_tags, unicode)
+selectively_remove_spaces_between_tags = allow_lazy(
+    selectively_remove_spaces_between_tags, unicode)
 
 
 class SpecialSpacelessNode(template.Node):
+
     def __init__(self, nodelist):
         self.nodelist = nodelist
 

@@ -10,28 +10,33 @@ you're using a custom model.
 
 from django import forms
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Div, Submit, HTML, Button, Row, Field,Reset,MultiField
+from crispy_forms.layout import Layout, Div, Submit, HTML, Button, Row, Field, Reset, MultiField
 from crispy_forms.bootstrap import FormActions
 import datetime
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
 
+
 class LoginForm(forms.Form):
     username = forms.CharField(max_length=30)
-    password = forms.CharField(widget=forms.PasswordInput(render_value=False),max_length=30)
+    password = forms.CharField(
+        widget=forms.PasswordInput(
+            render_value=False),
+        max_length=30)
 
-    def __init__(self,*args,**kwargs):
+    def __init__(self, *args, **kwargs):
         self.helper = FormHelper()
         self.helper.form_class = 'form-horizontal'
         self.helper.form_method = 'POST'
         self.helper.layout = Layout(
-            Field('username',placeholder = 'UserName'),
-            Field('password',placeholder = 'Password'),
+            Field('username', placeholder='UserName'),
+            Field('password', placeholder='Password'),
             FormActions(
                 Submit('Login', 'Login', css_class="btn-primary"),
             )
         )
-        super(LoginForm, self).__init__(*args,**kwargs)
+        super(LoginForm, self).__init__(*args, **kwargs)
+
 
 class RegistrationForm(forms.Form):
     """
@@ -48,15 +53,20 @@ class RegistrationForm(forms.Form):
     """
     required_css_class = 'required'
 
-    username = forms.RegexField(regex=r'^[\w.@+-]+$',
-                                max_length=30,
-                                label=_("Username"),
-                                error_messages={'invalid': _("This value may contain only letters, numbers and @/./+/-/_ characters.")})
+    username = forms.RegexField(
+        regex=r'^[\w.@+-]+$',
+        max_length=30,
+        label=_("Username"),
+        error_messages={
+            'invalid': _("This value may contain only letters, numbers and @/./+/-/_ characters.")})
     email = forms.EmailField(label=_("E-mail"))
 
     fname = forms.CharField(label=_("First Name"), max_length=30)
 
-    mname = forms.CharField(label=_("Middle Name"), max_length=30, required = False)
+    mname = forms.CharField(
+        label=_("Middle Name"),
+        max_length=30,
+        required=False)
 
     lname = forms.CharField(label=_("Last Name"), max_length=30)
 
@@ -67,25 +77,24 @@ class RegistrationForm(forms.Form):
     password2 = forms.CharField(widget=forms.PasswordInput,
                                 label=_("Password (again)"), max_length=30)
 
-
-    def __init__(self,*args,**kwargs):
+    def __init__(self, *args, **kwargs):
         self.helper = FormHelper()
         self.helper.form_class = 'form-horizontal'
         self.helper.form_method = 'POST'
         self.helper.layout = Layout(
-            Field('username',placeholder = 'UserName'),
-            Field('fname',placeholder = 'First Name'),
-            Field('mname',placeholder = 'Middle Name'),
-            Field('lname',placeholder = 'Last Name'),
-            Field('dob',placeholder = 'Date Of Birth'),
-            Field('email',placeholder = 'Unique Email Id'),
-            Field('password1',placeholder = 'Password'),
-            Field('password2',placeholder = 'Password Again'),
+            Field('username', placeholder='UserName'),
+            Field('fname', placeholder='First Name'),
+            Field('mname', placeholder='Middle Name'),
+            Field('lname', placeholder='Last Name'),
+            Field('dob', placeholder='Date Of Birth'),
+            Field('email', placeholder='Unique Email Id'),
+            Field('password1', placeholder='Password'),
+            Field('password2', placeholder='Password Again'),
             FormActions(
                 Submit('SignUp', 'SignUp', css_class="btn-primary"),
             )
         )
-        super(RegistrationForm, self).__init__(*args,**kwargs)
+        super(RegistrationForm, self).__init__(*args, **kwargs)
 
     def clean_username(self):
         """
@@ -93,9 +102,11 @@ class RegistrationForm(forms.Form):
         in use.
 
         """
-        existing = User.objects.filter(username__iexact=self.cleaned_data['username'])
+        existing = User.objects.filter(
+            username__iexact=self.cleaned_data['username'])
         if existing.exists():
-            raise forms.ValidationError(_("A user with that username already exists."))
+            raise forms.ValidationError(
+                _("A user with that username already exists."))
         else:
             return self.cleaned_data['username']
 
@@ -108,9 +119,12 @@ class RegistrationForm(forms.Form):
 
         """
         if 'password1' in self.cleaned_data and 'password2' in self.cleaned_data:
-            if self.cleaned_data['password1'] != self.cleaned_data['password2']:
-                raise forms.ValidationError(_("The two password fields didn't match."))
+            if self.cleaned_data[
+                    'password1'] != self.cleaned_data['password2']:
+                raise forms.ValidationError(
+                    _("The two password fields didn't match."))
         return self.cleaned_data
+
 
 class RegistrationFormTermsOfService(RegistrationForm):
     """
@@ -118,9 +132,11 @@ class RegistrationFormTermsOfService(RegistrationForm):
     for agreeing to a site's Terms of Service.
 
     """
-    tos = forms.BooleanField(widget=forms.CheckboxInput,
-                             label=_(u'I have read and agree to the Terms of Service'),
-                             error_messages={'required': _("You must agree to the terms to register")})
+    tos = forms.BooleanField(
+        widget=forms.CheckboxInput,
+        label=_(u'I have read and agree to the Terms of Service'),
+        error_messages={
+            'required': _("You must agree to the terms to register")})
 
 
 class RegistrationFormUniqueEmail(RegistrationForm):
@@ -129,6 +145,7 @@ class RegistrationFormUniqueEmail(RegistrationForm):
     email addresses.
 
     """
+
     def clean_email(self):
         """
         Validate that the supplied email address is unique for the
@@ -136,7 +153,8 @@ class RegistrationFormUniqueEmail(RegistrationForm):
 
         """
         if User.objects.filter(email__iexact=self.cleaned_data['email']):
-            raise forms.ValidationError(_("This email address is already in use. Please supply a different email address."))
+            raise forms.ValidationError(
+                _("This email address is already in use. Please supply a different email address."))
         return self.cleaned_data['email']
 
 
@@ -163,6 +181,6 @@ class RegistrationFormNoFreeEmail(RegistrationForm):
         """
         email_domain = self.cleaned_data['email'].split('@')[1]
         if email_domain in self.bad_domains:
-            raise forms.ValidationError(_("Registration using free email addresses is prohibited. Please supply a different email address."))
+            raise forms.ValidationError(
+                _("Registration using free email addresses is prohibited. Please supply a different email address."))
         return self.cleaned_data['email']
-

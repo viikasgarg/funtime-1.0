@@ -24,9 +24,19 @@ except ImportError:
 SHA1_RE = re.compile('^[a-f0-9]{40}$')
 
 # Create your models here.
+
+
 class CustomUser(User):
-    mname = models.CharField(max_length=150, blank=True, null=True, verbose_name="Middle Name")
-    bday = models.DateField(blank=True, null=True, verbose_name="Birth Date", validators=settings.DATE_VALIDATORS)
+    mname = models.CharField(
+        max_length=150,
+        blank=True,
+        null=True,
+        verbose_name="Middle Name")
+    bday = models.DateField(
+        blank=True,
+        null=True,
+        verbose_name="Birth Date",
+        validators=settings.DATE_VALIDATORS)
 
 
 class RegistrationManager(models.Manager):
@@ -38,6 +48,7 @@ class RegistrationManager(models.Manager):
     keys), and for cleaning out expired inactive accounts.
 
     """
+
     def activate_user(self, activation_key):
         """
         Validate an activation key and activate the corresponding
@@ -111,7 +122,7 @@ class RegistrationManager(models.Manager):
         username = user.username
         if isinstance(username, unicode):
             username = username.encode('utf-8')
-        activation_key = hashlib.sha1(salt+username).hexdigest()
+        activation_key = hashlib.sha1(salt + username).hexdigest()
         return self.create(user=user,
                            activation_key=activation_key)
 
@@ -165,6 +176,7 @@ class RegistrationManager(models.Manager):
             except User.DoesNotExist:
                 profile.delete()
 
+
 class RegistrationProfile(models.Model):
     """
     A simple profile which stores an activation key for use during
@@ -217,9 +229,10 @@ class RegistrationProfile(models.Model):
            method returns ``True``.
 
         """
-        expiration_date = datetime.timedelta(days=settings.ACCOUNT_ACTIVATION_DAYS)
+        expiration_date = datetime.timedelta(
+            days=settings.ACCOUNT_ACTIVATION_DAYS)
         return self.activation_key == self.ACTIVATED or \
-               (self.user.date_joined + expiration_date <= datetime_now())
+            (self.user.date_joined + expiration_date <= datetime_now())
     activation_key_expired.boolean = True
 
     def send_activation_email(self, site):

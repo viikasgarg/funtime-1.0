@@ -4,7 +4,8 @@ from django.conf import settings
 import os
 import re
 
-ANNOTATION_RE = re.compile("\{?#[\s]*?(TODO|FIXME|BUG|HACK|WARNING|NOTE|XXX)[\s:]?(.+)")
+ANNOTATION_RE = re.compile(
+    "\{?#[\s]*?(TODO|FIXME|BUG|HACK|WARNING|NOTE|XXX)[\s:]?(.+)")
 ANNOTATION_END_RE = re.compile("(.*)#\}(.*)")
 
 
@@ -15,7 +16,8 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         # don't add django internal code
-        apps = filter(lambda app: not app.startswith('django.contrib'), settings.INSTALLED_APPS)
+        apps = filter(lambda app: not app.startswith(
+            'django.contrib'), settings.INSTALLED_APPS)
         template_dirs = getattr(settings, 'TEMPLATE_DIRS', [])
         if template_dirs:
             apps += template_dirs
@@ -38,9 +40,12 @@ class Command(BaseCommand):
                                             break
 
                                     if ANNOTATION_END_RE.search(msg.strip()):
-                                        msg = ANNOTATION_END_RE.findall(msg.strip())[0][0]
+                                        msg = ANNOTATION_END_RE.findall(msg.strip())[
+                                            0][0]
 
-                                    annotation_lines.append("[%3s] %-5s %s" % (i, tag, msg.strip()))
+                                    annotation_lines.append(
+                                        "[%3s] %-5s %s" %
+                                        (i, tag, msg.strip()))
                             if annotation_lines:
                                 print("%s:" % fpath)
                                 for annotation in annotation_lines:

@@ -13,6 +13,7 @@ except ImportError:
 
 
 class TruncateLetterTests(TestCase):
+
     def test_truncate_more_than_text_length(self):
         self.assertEquals(u"hello tests", truncate_letters("hello tests", 100))
 
@@ -34,6 +35,7 @@ class TruncateLetterTests(TestCase):
 
 
 class UUIDTests(TestCase):
+
     @skipIf(sys.version_info >= (2, 5, 0), 'uuid already in stdlib')
     def test_uuid3(self):
         # make a UUID using an MD5 hash of a namespace UUID and a name
@@ -64,12 +66,11 @@ class UUIDTests(TestCase):
         # get the raw 16 bytes of the UUID
         self.assertEquals(
             '\\x00\\x01\\x02\\x03\\x04\\x05\\x06\\x07\\x08\\t\\n\\x0b\\x0c\\r\\x0e\\x0f',
-            x.bytes
-        )
+            x.bytes)
 
     @skipIf(sys.version_info >= (2, 5, 0), 'uuid already in stdlib')
     def test_make_uuid_from_byte_string(self):
         self.assertEquals(
-            uuid.UUID(bytes='\\x00\\x01\\x02\\x03\\x04\\x05\\x06\\x07\\x08\\t\\n\\x0b\\x0c\\r\\x0e\\x0f'),
-            uuid.UUID('00010203-0405-0607-0809-0a0b0c0d0e0f')
-        )
+            uuid.UUID(
+                bytes='\\x00\\x01\\x02\\x03\\x04\\x05\\x06\\x07\\x08\\t\\n\\x0b\\x0c\\r\\x0e\\x0f'),
+            uuid.UUID('00010203-0405-0607-0809-0a0b0c0d0e0f'))

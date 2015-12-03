@@ -49,5 +49,7 @@ class LoggingBaseCommand(BaseCommand):
         try:
             super(LoggingBaseCommand, self).execute(*args, **options)
         except Exception as e:
-            logger.error(e, exc_info=sys.exc_info(), extra={'status_code': 500})
+            logger.error(
+                e, exc_info=sys.exc_info(), extra={
+                    'status_code': 500})
             raise

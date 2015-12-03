@@ -7,14 +7,17 @@ from .exceptions import FormHelpersException
 
 
 class DynamicLayoutHandler(object):
+
     def _check_layout(self):
         if self.layout is None:
-            raise FormHelpersException("You need to set a layout in your FormHelper")
+            raise FormHelpersException(
+                "You need to set a layout in your FormHelper")
 
     def _check_layout_and_form(self):
         self._check_layout()
         if self.form is None:
-            raise FormHelpersException("You need to pass a form instance to your FormHelper")
+            raise FormHelpersException(
+                "You need to pass a form instance to your FormHelper")
 
     def all(self):
         """
@@ -29,7 +32,8 @@ class DynamicLayoutHandler(object):
         """
         self._check_layout()
         max_level = kwargs.pop('max_level', 0)
-        filtered_layout_objects = self.layout.get_layout_objects(LayoutClasses, max_level=max_level)
+        filtered_layout_objects = self.layout.get_layout_objects(
+            LayoutClasses, max_level=max_level)
 
         return LayoutSlice(self.layout, filtered_layout_objects)
 
@@ -58,7 +62,10 @@ class DynamicLayoutHandler(object):
         # Let's exclude all fields with widgets like widget_type
         filtered_fields = []
         for pointer in layout_field_names:
-            if not isinstance(self.form.fields[pointer[1]].widget, widget_type):
+            if not isinstance(
+                    self.form.fields[
+                        pointer[1]].widget,
+                    widget_type):
                 filtered_fields.append(pointer)
 
         return LayoutSlice(self.layout, filtered_fields)
@@ -268,7 +275,11 @@ class FormHelper(DynamicLayoutHandler):
             fields = set(form.fields.keys())
             left_fields_to_render = fields - form.rendered_fields
             for field in left_fields_to_render:
-                html += render_field(field, form, self.form_style, context, template_pack=template_pack)
+                html += render_field(field,
+                                     form,
+                                     self.form_style,
+                                     context,
+                                     template_pack=template_pack)
 
         # If the user has Meta.fields defined, not included in the layout
         # we suppose they need to be rendered. Otherwise we render the
@@ -314,7 +325,8 @@ class FormHelper(DynamicLayoutHandler):
                 items['attrs']['class'] = self.form_class.strip()
         else:
             if template_pack == 'uni_form':
-                items['attrs']['class'] = self.attrs.get('class', '') + " uniForm"
+                items['attrs']['class'] = self.attrs.get(
+                    'class', '') + " uniForm"
 
         items['flat_attrs'] = flatatt(items['attrs'])
 
@@ -326,7 +338,8 @@ class FormHelper(DynamicLayoutHandler):
             items['formset_error_title'] = self.formset_error_title.strip()
 
         for attribute_name, value in self.__dict__.items():
-            if attribute_name not in items and attribute_name not in ['layout', 'inputs'] and not attribute_name.startswith('_'):
+            if attribute_name not in items and attribute_name not in [
+                    'layout', 'inputs'] and not attribute_name.startswith('_'):
                 items[attribute_name] = value
 
         return items

@@ -6,24 +6,24 @@ class Menu(models.Model):
     name = models.CharField(
         _(u'Name'),
         max_length=100
-        )
+    )
 
     slug = models.SlugField(
         _(u'Slug')
-        )
+    )
 
     base_url = models.CharField(
         _(u'Base URL'),
         max_length=100,
         blank=True,
         null=True
-        )
+    )
 
     description = models.TextField(
         _(u'Description'),
         blank=True,
         null=True
-        )
+    )
 
     class Meta:
         verbose_name = _(u'menu')
@@ -52,35 +52,32 @@ class MenuItem(models.Model):
     menu = models.ForeignKey(
         Menu,
         verbose_name=_(u'Name')
-        )
+    )
 
     order = models.IntegerField(
         _(u'Order'),
         default=500
-        )
+    )
 
-    link_url = models.CharField(
-        _(u'Link URL'),
-        max_length=100,
-        help_text=_(u'URL or URI to the content, eg /about/ or http://foo.com/')
-        )
+    link_url = models.CharField(_(u'Link URL'), max_length=100, help_text=_(
+        u'URL or URI to the content, eg /about/ or http://foo.com/'))
 
     title = models.CharField(
         _(u'Title'),
         max_length=100
-        )
+    )
 
     login_required = models.BooleanField(
         _(u'Login required'),
         blank=True,
         help_text=_(u'Should this item only be shown to authenticated users?')
-        )
+    )
 
     anonymous_only = models.BooleanField(
         _(u'Anonymous only'),
         blank=True,
         help_text=_(u'Should this item only be shown to non-logged-in users?')
-        )
+    )
 
     class Meta:
         verbose_name = _(u'menu item')

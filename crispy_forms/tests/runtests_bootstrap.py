@@ -1,10 +1,11 @@
 #!/usr/bin/env python
 
-import os, sys
+import os
+import sys
 
 os.environ['DJANGO_SETTINGS_MODULE'] = 'test_settings_bootstrap'
 parent = os.path.dirname(os.path.dirname(os.path.dirname(
-            os.path.abspath(__file__))))
+    os.path.abspath(__file__))))
 
 sys.path.insert(0, parent)
 

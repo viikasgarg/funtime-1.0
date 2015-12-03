@@ -3,8 +3,8 @@ Views which allow users to create and activate accounts.
 
 """
 import datetime
-from django.template import RequestContext,loader,Context
-from main.forms import LoginForm,RegistrationFormUniqueEmail
+from django.template import RequestContext, loader, Context
+from main.forms import LoginForm, RegistrationFormUniqueEmail
 from django.http import HttpResponse
 from django.utils.safestring import mark_safe
 from django.contrib.auth import authenticate
@@ -25,6 +25,7 @@ class _RequestPassingFormView(FormView):
     enable finer-grained processing.
 
     """
+
     def get(self, request, *args, **kwargs):
         # Pass request to get_form_class and get_form for per-request
         # form control.
@@ -148,8 +149,10 @@ class ActivationView(TemplateView):
     def get_success_url(self, request, user):
         raise NotImplementedError
 
+
 def home(request):
-    # This view is missing all form handling logic for simplicity of the example
+    # This view is missing all form handling logic for simplicity of the
+    # example
     grid_rows = []
 
     if "POST" == request.method:
@@ -171,8 +174,9 @@ def home(request):
 
     if 'GET' == request.method:
         t = loader.get_template('main.html')
-        c = RequestContext(request,{'login_form': login_form, 'signup_form':signup_form})
+        c = RequestContext(
+            request, {
+                'login_form': login_form, 'signup_form': signup_form})
         resp = t.render(c)
 
     return HttpResponse(resp)
-

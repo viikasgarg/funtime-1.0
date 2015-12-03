@@ -20,17 +20,20 @@ class Command(LabelCommand):
     def runjobs(self, when, options):
         verbosity = int(options.get('verbosity', 1))
         jobs = get_jobs(when, only_scheduled=True)
-        list = jobs.keys()
-        list.sort()
+        list = sorted(jobs.keys())
         for app_name, job_name in list:
             job = jobs[(app_name, job_name)]
             if verbosity > 1:
-                print("Executing %s job: %s (app: %s)" % (when, job_name, app_name))
+                print(
+                    "Executing %s job: %s (app: %s)" %
+                    (when, job_name, app_name))
             try:
                 job().execute()
             except Exception:
                 import traceback
-                print("ERROR OCCURED IN %s JOB: %s (APP: %s)" % (when.upper(), job_name, app_name))
+                print(
+                    "ERROR OCCURED IN %s JOB: %s (APP: %s)" %
+                    (when.upper(), job_name, app_name))
                 print("START TRACEBACK:")
                 traceback.print_exc()
                 print("END TRACEBACK\n")
@@ -74,13 +77,24 @@ class Command(LabelCommand):
             self.usage_msg()
             return
         elif len(args) == 1:
-            if not args[0] in ['minutely', 'quarter_hourly', 'hourly', 'daily', 'weekly', 'monthly', 'yearly']:
+            if not args[0] in [
+                    'minutely',
+                    'quarter_hourly',
+                    'hourly',
+                    'daily',
+                    'weekly',
+                    'monthly',
+                    'yearly']:
                 self.usage_msg()
                 return
             else:
                 when = args[0]
         if options.get('list_jobs'):
-            print_jobs(when, only_scheduled=True, show_when=True, show_appname=True)
+            print_jobs(
+                when,
+                only_scheduled=True,
+                show_when=True,
+                show_appname=True)
         else:
             if not when:
                 self.usage_msg()
@@ -91,7 +105,16 @@ class Command(LabelCommand):
 # Backwards compatibility for Django r9110
 if not [opt for opt in Command.option_list if opt.dest == 'verbosity']:
     Command.option_list += (
-        make_option('--verbosity', '-v', action="store", dest="verbosity",
-                    default='1', type='choice', choices=['0', '1', '2'],
-                    help="Verbosity level; 0=minimal output, 1=normal output, 2=all output"),
+        make_option(
+            '--verbosity',
+            '-v',
+            action="store",
+            dest="verbosity",
+            default='1',
+            type='choice',
+            choices=[
+                '0',
+                '1',
+                '2'],
+            help="Verbosity level; 0=minimal output, 1=normal output, 2=all output"),
     )

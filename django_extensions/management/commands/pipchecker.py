@@ -41,9 +41,11 @@ class Command(NoArgsCommand):
         elif os.path.exists("requirements.txt"):
             req_files = ["requirements.txt"]
         elif os.path.exists("requirements"):
-            req_files = ["requirements/{0}".format(f) for f in os.listdir("requirements")
-                         if os.path.isfile(os.path.join("requirements", f)) and
-                         f.lower().endswith(".txt")]
+            req_files = [
+                "requirements/{0}".format(f) for f in os.listdir("requirements") if os.path.isfile(
+                    os.path.join(
+                        "requirements",
+                        f)) and f.lower().endswith(".txt")]
         else:
             sys.exit("requirements not found")
 
@@ -101,14 +103,16 @@ class Command(NoArgsCommand):
                 if not available_version:
                     msg = "release is not on pypi (check capitalization and/or --extra-index-url)"
                 elif self.options['show_newer'] and dist_version > available_version:
-                    msg = "{0} available (newer installed)".format(available_version)
+                    msg = "{0} available (newer installed)".format(
+                        available_version)
                 elif available_version > dist_version:
                     msg = "{0} available".format(available_version)
                 else:
                     msg = "up to date"
                     del self.reqs[name]
                     continue
-                pkg_info = "{dist.project_name} {dist.version}".format(dist=dist)
+                pkg_info = "{dist.project_name} {dist.version}".format(
+                    dist=dist)
             else:
                 msg = "not installed"
                 pkg_info = name
@@ -165,11 +169,15 @@ class Command(NoArgsCommand):
                 "content-type": "application/json",
             }
             if self.github_api_token:
-                headers["Authorization"] = "token {0}".format(self.github_api_token)
-            user, repo = urlparse.urlparse(req_url).path.split("#")[0].strip("/").rstrip("/").split("/")
+                headers["Authorization"] = "token {0}".format(
+                    self.github_api_token)
+            user, repo = urlparse.urlparse(req_url).path.split(
+                "#")[0].strip("/").rstrip("/").split("/")
 
-            test_auth = self._urlopen_as_json("https://api.github.com/django/", headers=headers)
-            if "message" in test_auth and test_auth["message"] == "Bad credentials":
+            test_auth = self._urlopen_as_json(
+                "https://api.github.com/django/", headers=headers)
+            if "message" in test_auth and test_auth[
+                    "message"] == "Bad credentials":
                 sys.exit("\nGithub API: Bad credentials. Aborting!\n")
             elif "message" in test_auth and test_auth["message"].startswith("API Rate Limit Exceeded"):
                 sys.exit("\nGithub API: Rate Limit Exceeded. Aborting!\n")
@@ -185,22 +193,29 @@ class Command(NoArgsCommand):
                 msg = "repo is not frozen"
 
             if frozen_commit_sha:
-                branch_url = "https://api.github.com/repos/{0}/{1}/branches".format(user, repo_name)
-                branch_data = self._urlopen_as_json(branch_url, headers=headers)
+                branch_url = "https://api.github.com/repos/{0}/{1}/branches".format(
+                    user, repo_name)
+                branch_data = self._urlopen_as_json(
+                    branch_url, headers=headers)
 
                 frozen_commit_url = "https://api.github.com/repos/{0}/{1}/commits/{2}" \
                     .format(user, repo_name, frozen_commit_sha)
-                frozen_commit_data = self._urlopen_as_json(frozen_commit_url, headers=headers)
+                frozen_commit_data = self._urlopen_as_json(
+                    frozen_commit_url, headers=headers)
 
-                if "message" in frozen_commit_data and frozen_commit_data["message"] == "Not Found":
-                    msg = "{0} not found in {1}. Repo may be private.".format(frozen_commit_sha[:10], name)
+                if "message" in frozen_commit_data and frozen_commit_data[
+                        "message"] == "Not Found":
+                    msg = "{0} not found in {1}. Repo may be private.".format(
+                        frozen_commit_sha[:10], name)
                 elif frozen_commit_sha in [branch["commit"]["sha"] for branch in branch_data]:
                     msg = "up to date"
                 else:
-                    msg = "{0} is not the head of any branch".format(frozen_commit_data["sha"][:10])
+                    msg = "{0} is not the head of any branch".format(
+                        frozen_commit_data["sha"][:10])
 
             if "dist" in req:
-                pkg_info = "{dist.project_name} {dist.version}".format(dist=req["dist"])
+                pkg_info = "{dist.project_name} {dist.version}".format(dist=req[
+                                                                       "dist"])
             else:
                 pkg_info = "{0} {1}".format(name, frozen_commit_sha[:10])
             print("{pkg_info:40} {msg}".format(pkg_info=pkg_info, msg=msg))
@@ -217,9 +232,12 @@ class Command(NoArgsCommand):
             print("\nOnly pypi and github based requirements are supported:")
             for name, req in self.reqs.items():
                 if "dist" in req:
-                    pkg_info = "{dist.project_name} {dist.version}".format(dist=req["dist"])
+                    pkg_info = "{dist.project_name} {dist.version}".format(dist=req[
+                                                                           "dist"])
                 elif "url" in req:
                     pkg_info = "{url}".format(url=req["url"])
                 else:
                     pkg_info = "unknown package"
-                print("{pkg_info:40} is not a pypi or github requirement".format(pkg_info=pkg_info))
+                print(
+                    "{pkg_info:40} is not a pypi or github requirement".format(
+                        pkg_info=pkg_info))

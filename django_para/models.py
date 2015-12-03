@@ -6,24 +6,24 @@ class Para(models.Model):
     name = models.CharField(
         _(u'Name'),
         max_length=100
-        )
+    )
 
     slug = models.SlugField(
         _(u'Slug')
-        )
+    )
 
     base_url = models.CharField(
         _(u'Base URL'),
         max_length=100,
         blank=True,
         null=True
-        )
+    )
 
     description = models.TextField(
         _(u'Description'),
         blank=True,
         null=True
-        )
+    )
 
     class Meta:
         verbose_name = _(u'para')
@@ -52,42 +52,41 @@ class ParaItem(models.Model):
     para = models.ForeignKey(
         Para,
         verbose_name=_(u'Name')
-        )
+    )
 
     order = models.IntegerField(
         _(u'Order'),
         default=500
-        )
+    )
 
     link_url = models.CharField(
         _(u'Link URL'),
-          blank=True,
+        blank=True,
         max_length=300,
-        help_text=_(u'URL or URI to the content, eg /about/ or http://foo.com/')
-        )
+        help_text=_(u'URL or URI to the content, eg /about/ or http://foo.com/'))
 
     title = models.CharField(
         _(u'Title'),
         max_length=200
-        )
+    )
 
     description = models.TextField(
         _(u'Description'),
         blank=True,
         null=True
-        )
+    )
 
     login_required = models.BooleanField(
         _(u'Login required'),
         blank=True,
         help_text=_(u'Should this item only be shown to authenticated users?')
-        )
+    )
 
     anonymous_only = models.BooleanField(
         _(u'Anonymous only'),
         blank=True,
         help_text=_(u'Should this item only be shown to non-logged-in users?')
-        )
+    )
 
     class Meta:
         verbose_name = _(u'para item')

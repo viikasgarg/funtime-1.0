@@ -8,6 +8,8 @@ from django import template
 
 
 TEMPLATE_PACK = getattr(settings, 'CRISPY_TEMPLATE_PACK', 'bootstrap')
+
+
 def uni_formset_template(template_pack=TEMPLATE_PACK):
     return get_template('%s/uni_formset.html' % template_pack)
 uni_formset_template = memoize(uni_formset_template, {}, 1)
@@ -18,6 +20,7 @@ def uni_form_template(template_pack=TEMPLATE_PACK):
 uni_form_template = memoize(uni_form_template, {}, 1)
 
 register = template.Library()
+
 
 @register.filter(name='as_uni_form')
 @register.filter(name='crispy')
@@ -43,6 +46,7 @@ def as_crispy_form(form, template_pack=TEMPLATE_PACK):
         c = Context({'form': form, 'form_show_errors': True})
     return template.render(c)
 
+
 @register.filter(name='as_uni_errors')
 @register.filter(name='as_crispy_errors')
 def as_crispy_errors(form, template_pack=TEMPLATE_PACK):
@@ -59,7 +63,7 @@ def as_crispy_errors(form, template_pack=TEMPLATE_PACK):
         c = Context({'formset': form})
     else:
         template = get_template('%s/errors.html' % template_pack)
-        c = Context({'form':form})
+        c = Context({'form': form})
     return template.render(c)
 
 
@@ -75,5 +79,5 @@ def as_crispy_field(field, template_pack=TEMPLATE_PACK):
         {{ form.field|as_crispy_field:"bootstrap" }}
     """
     template = get_template('%s/field.html' % template_pack)
-    c = Context({'field':field, 'form_show_errors': True})
+    c = Context({'field': field, 'form_show_errors': True})
     return template.render(c)

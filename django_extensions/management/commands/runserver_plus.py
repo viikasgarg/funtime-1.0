@@ -38,10 +38,18 @@ class Command(BaseCommand):
     )
     if USE_STATICFILES:
         option_list += (
-            make_option('--nostatic', action="store_false", dest='use_static_handler', default=True,
-                        help='Tells Django to NOT automatically serve static files at STATIC_URL.'),
-            make_option('--insecure', action="store_true", dest='insecure_serving', default=False,
-                        help='Allows serving static files even if DEBUG is False.'),
+            make_option(
+                '--nostatic',
+                action="store_false",
+                dest='use_static_handler',
+                default=True,
+                help='Tells Django to NOT automatically serve static files at STATIC_URL.'),
+            make_option(
+                '--insecure',
+                action="store_true",
+                dest='insecure_serving',
+                default=False,
+                help='Allows serving static files even if DEBUG is False.'),
         )
     help = "Starts a lightweight Web server for development."
     args = '[optional port number, or ipaddr:port]'
@@ -52,7 +60,8 @@ class Command(BaseCommand):
     def handle(self, addrport='', *args, **options):
         import django
 
-        setup_logger(logger, self.stderr, filename=options.get('output_file', None))  # , fmt="[%(name)s] %(message)s")
+        setup_logger(logger, self.stderr, filename=options.get(
+            'output_file', None))  # , fmt="[%(name)s] %(message)s")
         logredirect = RedirectHandler(__name__)
 
         # Redirect werkzeug log items
@@ -69,16 +78,23 @@ class Command(BaseCommand):
                 sqlparse = None  # noqa
 
             class PrintQueryWrapper(util.CursorDebugWrapper):
+
                 def execute(self, sql, params=()):
                     starttime = time.time()
                     try:
                         return self.cursor.execute(sql, params)
                     finally:
-                        raw_sql = self.db.ops.last_executed_query(self.cursor, sql, params)
+                        raw_sql = self.db.ops.last_executed_query(
+                            self.cursor, sql, params)
                         execution_time = time.time() - starttime
-                        therest = ' -- [Execution time: %.6fs] [Database: %s]' % (execution_time, self.db.alias)
+                        therest = ' -- [Execution time: %.6fs] [Database: %s]' % (
+                            execution_time, self.db.alias)
                         if sqlparse:
-                            logger.info(sqlparse.format(raw_sql, reindent=True) + therest)
+                            logger.info(
+                                sqlparse.format(
+                                    raw_sql,
+                                    reindent=True) +
+                                therest)
                         else:
                             logger.info(raw_sql + therest)
 
@@ -97,7 +113,8 @@ class Command(BaseCommand):
         try:
             from werkzeug import run_simple, DebuggedApplication
         except ImportError:
-            raise CommandError("Werkzeug is required to use runserver_plus.  Please visit http://werkzeug.pocoo.org/ or install via pip. (pip install Werkzeug)")
+            raise CommandError(
+                "Werkzeug is required to use runserver_plus.  Please visit http://werkzeug.pocoo.org/ or install via pip. (pip install Werkzeug)")
 
         # usurp django's handler
         from django.views import debug
@@ -123,22 +140,28 @@ class Command(BaseCommand):
         use_reloader = options.get('use_reloader', True)
         open_browser = options.get('open_browser', False)
         cert_path = options.get("cert_path")
-        quit_command = (sys.platform == 'win32') and 'CTRL-BREAK' or 'CONTROL-C'
+        quit_command = (
+            sys.platform == 'win32') and 'CTRL-BREAK' or 'CONTROL-C'
 
         def inner_run():
             print("Validating models...")
             self.validate(display_num_errors=True)
-            print("\nDjango version %s, using settings %r" % (django.get_version(), settings.SETTINGS_MODULE))
-            print("Development server is running at http://%s:%s/" % (addr, port))
+            print("\nDjango version %s, using settings %r" %
+                  (django.get_version(), settings.SETTINGS_MODULE))
+            print(
+                "Development server is running at http://%s:%s/" %
+                (addr, port))
             print("Using the Werkzeug debugger (http://werkzeug.pocoo.org/)")
             print("Quit the server with %s." % quit_command)
             path = options.get('admin_media_path', '')
             if not path:
-                admin_media_path = os.path.join(django.__path__[0], 'contrib/admin/static/admin')
+                admin_media_path = os.path.join(
+                    django.__path__[0], 'contrib/admin/static/admin')
                 if os.path.isdir(admin_media_path):
                     path = admin_media_path
                 else:
-                    path = os.path.join(django.__path__[0], 'contrib/admin/media')
+                    path = os.path.join(
+                        django.__path__[0], 'contrib/admin/media')
             handler = WSGIHandler()
             if USE_ADMINMEDIAHANDLER:
                 handler = AdminMediaHandler(handler, path)
@@ -164,9 +187,10 @@ class Command(BaseCommand):
                 try:
                     import OpenSSL  # NOQA
                 except ImportError:
-                    raise CommandError("Python OpenSSL Library is "
-                                       "required to use runserver_plus with ssl support. "
-                                       "Install via pip (pip install pyOpenSSL).")
+                    raise CommandError(
+                        "Python OpenSSL Library is "
+                        "required to use runserver_plus with ssl support. "
+                        "Install via pip (pip install pyOpenSSL).")
 
                 dir_path, cert_file = os.path.split(cert_path)
                 if not dir_path:
@@ -178,12 +202,13 @@ class Command(BaseCommand):
                     from werkzeug.serving import make_ssl_devcert
                     if os.path.exists(certfile) and \
                             os.path.exists(keyfile):
-                                ssl_context = (certfile, keyfile)
+                        ssl_context = (certfile, keyfile)
                     else:  # Create cert, key files ourselves.
                         ssl_context = make_ssl_devcert(
                             os.path.join(dir_path, root), host='localhost')
                 except ImportError:
-                    print("Werkzeug version is less than 0.9, trying adhoc certificate.")
+                    print(
+                        "Werkzeug version is less than 0.9, trying adhoc certificate.")
                     ssl_context = "adhoc"
 
             else:
