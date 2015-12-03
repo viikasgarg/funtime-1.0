@@ -23,7 +23,7 @@
 ########################################################################
 
 
-############    Public Functions #######################################
+#    Public Functions #######################################
 def LifePathValue(day, month, year):
     return SingleDigit(day + month + year, True)
 
@@ -103,7 +103,7 @@ def PinnacleNumbers(day, month, year):
             'third_pinnacle': thirdpinnacle, 'fourth_pinnacle': fourthpinnacle}
 
 ########################################################################
-####  Internal Functions    ############################################
+#  Internal Functions    ############################################
 
 
 def NameVoweltoNumber(name, WithMasters):
@@ -175,7 +175,7 @@ def EssenceNameValue(name, age_year):
     return ret_val
 
 ########################################################################
-###  Test Functions ####################################################
+#  Test Functions ####################################################
 
 
 def testSingleDigit():

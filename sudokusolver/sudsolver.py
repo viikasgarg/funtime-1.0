@@ -51,32 +51,15 @@ class Sudoku:
                             # print l,j,self.values[l][j],k +"\n"
 
                     for l in range(0, 9):
-                        if len(self.values[i - (i %
-                                                3) + l / 3][j - (j %
-                                                                 3) + l %
-                                                            3]) != 1 and int(k) in self.values[i - (i %
-                                                                                                    3) + l / 3][j - (j %
-                                                                                                                     3) + l %
-                                                                                                                3]:
-                            self.values[i - (i %
-                                             3) + l / 3][j - (j %
-                                                              3) + l %
-                                                         3].remove(int(k))
-                            if len(self.values[i - (i %
-                                                    3) + l / 3][j - (j %
-                                                                     3) + l %
-                                                                3]) == 1:
-                                self.data[i - (i %
-                                               3) + l / 3][j - (j %
-                                                                3) + l %
-                                                           3] = self.values[i - (i %
-                                                                                 3) + l / 3][j - (j %
-                                                                                                  3) + l %
-                                                                                             3][0]
+                        if len(self.values[i - (i %3) + l / 3][j - (j % 3) + l %
+                                                            3]) != 1 and int(k) in self.values[
+                                                             i - (i % 3) + l / 3][j - (j % 3) + l % 3]:
+                            self.values[i - (i % 3) + l / 3][j - (j % 3) + l % 3].remove(int(k))
+                            if len(self.values[i - (i % 3) + l / 3][j - (j % 3) + l % 3]) == 1:
+                                self.data[i - (i % 3) + l / 3][j - (j % 3) + l % 3] = self.values[
+                                                                i - (i %3) + l / 3][j - (j % 3) + l % 3][0]
                                 work = 1
-                             # print
-                             # i-(i%3)+l/3,j-(j%3)+l%3,self.values[i-(i%3)+l/3][j-(j%3)+l%3],k
-                             # +"\n"
+
 
         if work:
             self.crack()
